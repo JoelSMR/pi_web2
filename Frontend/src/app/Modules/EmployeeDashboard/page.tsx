@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import ProductCheckout from '../ProductCheckout/ProductCheckout'
+import AdminBoard from '../AdminBoard/page'
 import Sidebar from './Sidebar'
 
 const Dashboard: React.FC = () => {
@@ -10,7 +11,9 @@ const Dashboard: React.FC = () => {
   const renderContent=()=>{
     switch(selected){
       case 'ProductCheckout':
-        return <ProductCheckout/>
+        return <ProductCheckout/>;
+      case "AdminModule":
+        return <AdminBoard/>
     }
   }
   return (

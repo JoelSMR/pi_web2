@@ -18,9 +18,9 @@ const SideBar:React.FC<SideBarProps>=({onSelect})=>{
       </button>
       <button
         className="p-4 hover:bg-gray-700 text-left"
-        onClick={() => onSelect("settings")}
+        onClick={() => onSelect("AdminModule")}
       >
-        Configuración
+        AdminModule
       </button>
     
     </div>
