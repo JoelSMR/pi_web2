@@ -12,7 +12,8 @@
     "i": "^0.3.7",
     "next": "15.4.5",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-qr-barcode-scanner": "^2.1.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

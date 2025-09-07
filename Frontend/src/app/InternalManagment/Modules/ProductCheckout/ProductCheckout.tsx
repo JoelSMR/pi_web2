@@ -1,6 +1,8 @@
 'use client'
 import React from 'react'
-import useLoader from '@/app/Components/UI/Loader/useLoader'
+import useLoader from '@/Global/GlobalComponents/UI/Loader/useLoader'
+import BarcodeReader from './Utils/BarcodeReader'
+
 const ProductCheckout = () => {
   const {RenderLoader,showLoader,hideLoader,loading} = useLoader()
   const handleSubmmit=()=>{
@@ -11,6 +13,8 @@ const ProductCheckout = () => {
     <>
     <button onClick={handleSubmmit}>Carga</button>
       {loading&& <RenderLoader/>}
+
+      <BarcodeReader/>
     </>
   )
 }
