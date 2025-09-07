@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import ProductCheckout from '../ProductCheckout/ProductCheckout'
-import AdminBoard from '../AdminBoard/page'
+import AdminBoard from '@/app/Modules/AdminBoard/page'
 import Sidebar from './Sidebar'
 
 const Dashboard: React.FC = () => {
