@@ -6,11 +6,15 @@ import BarcodeScanner  from 'react-qr-barcode-scanner'
 
 
 const BarcodeReader: React.FC = () => {
-    const [readedData,setReadedData] = useState<string | null>(null);
+    const [readedData,setReadedData] = useState<string | null>("INGO");
+    const [error,setError] = useState<string|DOMException>('');
     //const [RenderLoader,showLoader,hideLoader,loading] = useLoader();
 
     const handleError=(err:string|DOMException)=>{
-      console.log("Error --" +err)
+      console.log(err)
+      if(err=="NotFoundError"|| err instanceof DOMException){
+        setError(err)
+      }
     }
 
     /**  The BarcodeScanner have the prop `onUpdate` that receives 2 parameters:
@@ -23,7 +27,11 @@ const BarcodeReader: React.FC = () => {
   return (
     <>
     <h1>Scanner</h1>
-      <BarcodeScanner
+      {error?(
+          <>
+          <p>NO camara aquí</p>
+          </>
+        ):<BarcodeScanner
         width={500}
         height={500}
         onUpdate={(err, result) => {
@@ -33,8 +41,8 @@ const BarcodeReader: React.FC = () => {
         }}
         onError={(error)=>{handleError(error)}}
         facingMode='user'
-      />
-      <p>JOpe manin</p>
+      />}
+      <p>Jope manin</p>
       <p>{readedData}</p>
     </>
   );
