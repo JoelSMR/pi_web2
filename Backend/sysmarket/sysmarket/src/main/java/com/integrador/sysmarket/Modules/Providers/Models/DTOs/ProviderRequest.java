@@ -1,5 +1,5 @@
 package com.integrador.sysmarket.Modules.Providers.Models;
 
-public class Provider {
+public class ProviderRequest {
     
 }

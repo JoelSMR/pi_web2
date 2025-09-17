@@ -53,7 +53,7 @@ public class EncryptionUtil{
         System.arraycopy(iv, 0, encryptedMessage, salt.length, iv.length);
         System.arraycopy(encrypted, 0, encryptedMessage, salt.length + iv.length, encrypted.length);
 
-        return Base64.getEncoder().encodeToString(encryptedMessage);
+        return Base64.getEncoder().encodeToString(encryptedMessage).toString();
 
         
     }
