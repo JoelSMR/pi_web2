@@ -32,4 +32,43 @@ public class LoggerUtil {
             System.err.println("Could not create logs folder: " + e.getMessage());
         }
     }
+    
+    /**
+     * Writes a message to the specified log file inside a subfolder.
+     *
+     * @param subFolder the name of the subfolder (e.g., "error")
+     * @param msg       the message to be logged
+     */
+    private static void write(String subFolder, String msg) {
+        String line = LocalDateTime.now().format(MSG_TIME_FORMAT) + " - " + msg + System.lineSeparator();
+        try {
+            Path folder = LOG_FOLDER.resolve(subFolder);
+            if (!Files.exists(folder)) {
+                Files.createDirectories(folder);
+            }
+
+            // Daily file name: yyyy-MM-dd.log
+            String fileName = LocalDateTime.now().format(FILE_DATE_FORMAT) + ".log";
+            Path filePath = folder.resolve(fileName);
+
+            Files.writeString(filePath, line, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            System.err.println("Error writing log in " + subFolder + " : " + e.getMessage());
+        }
+    }
+
+    /** Logs initialization-related messages into {@code logs/init/yyyy-MM-dd.log}. */
+    public static void logInit(String msg) {
+        write("init", msg);
+    }
+
+    /** Logs error messages into {@code logs/error/yyyy-MM-dd.log}. */
+    public static void logError(String msg) {
+        write("error", msg);
+    }
+
+    /** Logs payment-related messages into {@code logs/payment/yyyy-MM-dd.log}. */
+    public static void logPayment(String msg) {
+        write("payment", msg);
+    }
 }
