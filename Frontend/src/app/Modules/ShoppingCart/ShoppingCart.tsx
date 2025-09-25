@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 // ---- Types ----
 export type CartItem = {
-  id: string; // product id
+  id: number; // product id
   name: string;
   price: number; // unit price
   qty: number; // quantity selected
@@ -15,7 +15,7 @@ export type CartItem = {
  * 
  */
 export type CartValidationRequest = {
-  items: Array<{ id: string; qty: number }>;
+  items: Array<{ id: number; qty: number }>;
 };
 
 export type CartValidationResponse = {
@@ -40,7 +40,7 @@ function loadCart(): CartItem[] {
     return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
-  }
+  }55
 }
 
 function saveCart(items: CartItem[]) {
@@ -76,7 +76,7 @@ export default function ShoppingCart() {
       const invalid = res.items.filter((i) => !i.isValid);
       if (invalid.length > 0) {
         const lines = invalid.map((i) => {
-          const meta = items.find((x) => x.id === i.id);
+          const meta = items.find((x) => x.id === Number(i.id));
           const name = meta?.name ?? i.id;
           const suffix = i.message ? ` — ${i.message}` : i.availableQty != null ? ` — disponible: ${i.availableQty}` : "";
           return `• ${name}${suffix}`;
@@ -89,17 +89,17 @@ export default function ShoppingCart() {
   const total = useMemo(() => items.reduce((acc, it) => acc + it.price * it.qty, 0), [items]);
 
   function updateQty(id: string, qty: number) {
-    setItems((prev) => prev.map((it) => (it.id === id ? { ...it, qty: clampQty(qty) } : it)));
+    setItems((prev) => prev.map((it) => (it.id === Number(id) ? { ...it, qty: clampQty(qty) } : it)));
   }
 
   function removeItem(id: string) {
-    setItems((prev) => prev.filter((it) => it.id !== id));
+    setItems((prev) => prev.filter((it) => it.id !== Number(id)));
   }
 
   // Demo: Add an example product (this would normally come from a product page)
   function addDemoItem() {
     const demo: CartItem = {
-      id: Math.random().toString(36).slice(2, 9),
+      id: Math.floor(Math.random() * 10000000),
       name: `Producto ${items.length + 1}`,
       price: Number((10 + Math.random() * 90).toFixed(2)),
       qty: 1,
@@ -170,10 +170,10 @@ export default function ShoppingCart() {
                       min={1}
                       max={9999}
                       value={it.qty}
-                      onChange={(e) => updateQty(it.id, Number(e.target.value))}
+                      onChange={(e) => updateQty(String(it.id), Number(e.target.value))}
                     />
                     <button
-                      onClick={() => removeItem(it.id)}
+                      onClick={() => removeItem(String(it.id))}
                       className="px-3 py-2 rounded-xl bg-red-600/80 hover:bg-red-600 transition"
                       aria-label={`Quitar ${it.name}`}
                     >
@@ -240,6 +240,6 @@ async function validateCart(items: CartItem[]): Promise<CartValidationResponse> 
     return { ok: true, items: data.items };
   } catch {
     // Non-blocking per requirement — fall back to optimistic valid state
-    return { ok: false, items: items.map((i) => ({ id: i.id, isValid: true })) };
+    return { ok: false, items: items.map((i) => ({ id: String(i.id), isValid: true })) };
   }
 }
