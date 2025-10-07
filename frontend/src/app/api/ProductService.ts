@@ -1,4 +1,4 @@
-import { axiosProductInstance } from "./AxiosService";
+import { axiosProductInstance } from "./AxiosServiceFactory";
 
 export default class ProductService{
     private static api=axiosProductInstance
