@@ -27,7 +27,8 @@
 				"vscjava.vscode-java-pack",
 				"Oracle.oracle-java",
 				"vmware.vscode-boot-dev-pack",
-				"bradlc.vscode-tailwindcss"
+				"bradlc.vscode-tailwindcss",
+				"ms-azuretools.vscode-containers"
 			]
 		}
 	}
