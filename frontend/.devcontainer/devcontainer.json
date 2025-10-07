@@ -16,10 +16,11 @@
 		"vscode": {
 			"extensions": [
 				"bradlc.vscode-tailwindcss",
-				"ms-azuretools.vscode-containers"
+				"ms-azuretools.vscode-containers",
+				"dsznajder.es7-react-js-snippets"
 			]
 		}
-	}
+	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -28,7 +29,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "uname -a",
+	"postCreateCommand": " npm install -g npm@11.6.1 && npm install"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
