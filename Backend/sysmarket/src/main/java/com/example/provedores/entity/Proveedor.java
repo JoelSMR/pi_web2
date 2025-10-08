@@ -7,7 +7,7 @@ import lombok.Data;
 @Entity
 @Table(name = "tabla_proveedor")
 
-public class proveedor {
+public class Proveedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long proveedorId;
