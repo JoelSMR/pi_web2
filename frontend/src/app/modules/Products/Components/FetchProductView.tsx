@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import ProductService from '@/app/api/ProductService'
 import useLoader from '../../CustomHooks/useLoader'
 import { Product } from '../Models/ProductModels'
-import CardInfo from '../../Components/CardInfo'
+import CardInfo from './ProductCardInfo'
 
 const FetchProductView = () => {
     const {ToggleLoaderOn ,ToggleLoaderOff,RenderLoader} = useLoader();
@@ -19,15 +19,21 @@ const FetchProductView = () => {
       //      Real Funct
       //const response = await ProductService.deleteProductById(1);
       //console.log(response)
-      setTimeout(()=>{setProducts([])},3000)
+      await new Promise((res)=>setTimeout(res,300))
+      setProducts([])
       ToggleLoaderOff();
     }
 
     const handleEditProduct=async()=>{
+      try{
       ToggleLoaderOn();
       //const oldProduct:Product = await ProductService.getProductById(old_p_id);
-      setTimeout(()=>{setProducts([{"id":1,"category":"Ecategoria","description":"Edescripcion","name":"Enombre","price":112.0}])},3000);
+      await new Promise((res)=>setTimeout(res,300));
+      setProducts([{"id":1,"category":"Ecategoria","description":"Edescripcion","name":"Enombre","price":112.0}]);
+      }catch(error){console.log(error)}
+      finally{
       ToggleLoaderOff();
+      }
     }
     
     const handleFetchAllUsersHook=async()=>{

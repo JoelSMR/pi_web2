@@ -1,5 +1,5 @@
 import React from 'react'
-import { Product } from '../Products/Models/ProductModels'
+import { Product } from '../Models/ProductModels'
 
 interface CardInfoProps extends Product{
     onEdit?:()=> Promise<void> | void,
