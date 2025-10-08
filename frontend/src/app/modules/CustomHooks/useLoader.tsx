@@ -4,19 +4,20 @@ import Loader from '../Components/Loader'
 
 const useLoader = () => {
     const [isLoading,setIsLoading] = useState<boolean>(false);
-    const [msg, setMsg] = useState<string>("");
-
-    const ToggleLoaderOn= ()=> {
+     
+    const ToggleLoaderOn= useCallback(()=> {
         setIsLoading(true);
-    }
+        console.log("cargando")
+    },[]);
 
-    const ToggleLoaderOff= useCallback((msg='MensajePersonalizadoApagado')=>{
-        setMsg(msg);
+    const ToggleLoaderOff= useCallback(()=>{
+        console.log("dejando de cargar")
         setIsLoading(false);
     },[]);
 
     const RenderLoader =()=>{
-        return isLoading? (<Loader/>) :null
+        console.log("renderizando carga")
+        return isLoading? (<Loader />) :null
     };
 
     return {ToggleLoaderOn, ToggleLoaderOff, RenderLoader}
