@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import ProductService from '@/app/api/ProductService'
-import useLoader from '../../CustomHooks/useLoader'
+import useLoader from '../../../GlobalComponents/CustomHooks/useLoader'
 import { Product } from '../Models/ProductModels'
 import CardInfo from './ProductCardInfo'
 

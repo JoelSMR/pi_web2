@@ -1,6 +1,6 @@
 'use client'
 import React,{useCallback, useState} from 'react'
-import Loader from '../Components/Loader'
+import Loader from '../Renders/Loader'
 
 const useLoader = () => {
     const [isLoading,setIsLoading] = useState<boolean>(false);
