@@ -1,11 +1,12 @@
 package com.example.proveedores.repository;
 
-import com.example.proveedor.entity.Proveedor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.example.proveedores.entity.Proveedor;
+
 
 @Repository
-public class ProveedorRepository extends JpaRespository<Proveedor, Long> {
+public interface ProveedorRepository extends JpaRepository<Proveedor, Long> {
     
 }
