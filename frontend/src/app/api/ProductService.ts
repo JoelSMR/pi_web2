@@ -8,7 +8,7 @@ export default class ProductService{
             const response = await this.api.get("/");
             return response.data
         }catch(e:unknown){
-            throw new Error(e.response?.data?.mensaje || "Error en getAll")
+            console.log(e || "Error en getAll");
         }
     }
 
@@ -17,7 +17,7 @@ export default class ProductService{
         const response= await this.api.get("/"+id.toString())
         return response.data
         }
-        catch(e:unknown){throw new Error(e.response?.data?.mensaje || "Error en getById")            
+        catch(e:unknown){console.log(e || "Error en getById");            
         }
     }
 
@@ -26,7 +26,7 @@ export default class ProductService{
             const response = await this.api.delete("/"+id.toString())
             return response.data
         }catch(e:unknown){
-            throw new Error(e.response?.data?.mensaje? || "Error deleteById")
+            console.log(e || "Error deleteById");
         }
     }
 }
