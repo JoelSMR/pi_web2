@@ -2,30 +2,21 @@
 
 import React, { useState } from 'react'
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader';
+import { LoginFormProps } from '../Models/LogInFormModels';
 
 
-const LogInForm = () => {
-  const {ToggleLoaderOn,ToggleLoaderOff, RenderLoader} = useLoader();
+const LogInForm:React.FC<LoginFormProps> = ({onSubmit}) => {
+  const {RenderLoader} = useLoader();
   const [username,setUsername] = useState<string>("")
   const [password,setPassword] = useState<string>("")
   const [isPasswordHidden, setIsPasswordHidden] = useState<boolean>(false);
 
-  const handleLoginSubmit=async()=>{
-    ToggleLoaderOn();
-    //simulacion logica del enpoint
-    const realUser={username:"real",password:"real"};
-    if (username==realUser.username && password==realUser.password){
-      console.log("logueo ");
-    };
-    console.log("no logueo");
-    ToggleLoaderOff();
-    return false
-  }
 
   return (
     <React.Fragment>
       {/* If inner condition true->Render the loader */}
       <RenderLoader/>
+
       <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">  
       <h2 className="mb-6 text-center text-2xl font-semibold text-slate-900 dark:text-slate-100">  
         Iniciar sesión  
@@ -69,7 +60,7 @@ const LogInForm = () => {
   
       <button  
         type="button"  
-        onClick={handleLoginSubmit}  
+        onClick={()=>{onSubmit(username,password)}}  
         className="flex w-full items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:ring-offset-slate-800"  
       >  
         Entrar  

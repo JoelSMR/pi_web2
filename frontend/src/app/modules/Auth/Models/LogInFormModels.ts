@@ -1,5 +1,3 @@
-export interface LogInFormValues{
-    username:string;
-    password:string;
-    remember:boolean
+export interface LoginFormProps{
+    onSubmit:(user:string,pswd:string)=>Promise<void>|void;
 }
