@@ -1,8 +1,7 @@
 export interface LoaderContextValue{
     isLoading: boolean;
-    setIsLoading:()=>Promise<void>;
-    ToggleLoaderOn:()=>void;
+    ToggleLoaderOn:(mensaje:string)=>void;
     ToggleLoaderOff:()=>void;
-    setLoading:(newValue : boolean)=>void
+    setLoading:(newValue : boolean)=>void|Promise<void>
 
 }

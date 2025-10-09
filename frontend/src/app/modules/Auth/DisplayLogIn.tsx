@@ -7,14 +7,14 @@ const DisplayLogIn = () => {
       
 
     const handleLoginSubmit=async(username:string, password:string)=>{
-      ToggleLoaderOn();
+      ToggleLoaderOn("Comprobando Inicio de Sesion...");
       //simulacion logica del enpoint
       const realUser={username:"real",password:"real"};
       await new Promise((res)=>{setTimeout(res,3000)})
       if (username==realUser.username && password==realUser.password){
-        console.log("logueo ");
+        //login
       };
-      console.log("no logueo");
+      //console.log("no logueo");
       ToggleLoaderOff();
     }
 

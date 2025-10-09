@@ -1,12 +1,10 @@
 'use client'
 
 import React, { useState } from 'react'
-import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader';
 import { LoginFormProps } from '../Models/LogInFormModels';
 
 
 const LogInForm:React.FC<LoginFormProps> = ({onSubmit}) => {
-  const {RenderLoader} = useLoader();
   const [username,setUsername] = useState<string>("")
   const [password,setPassword] = useState<string>("")
   const [isPasswordHidden, setIsPasswordHidden] = useState<boolean>(false);
@@ -14,8 +12,6 @@ const LogInForm:React.FC<LoginFormProps> = ({onSubmit}) => {
 
   return (
     <React.Fragment>
-      {/* If inner condition true->Render the loader */}
-      <RenderLoader/>
 
       <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">  
       <h2 className="mb-6 text-center text-2xl font-semibold text-slate-900 dark:text-slate-100">  
@@ -57,7 +53,10 @@ const LogInForm:React.FC<LoginFormProps> = ({onSubmit}) => {
           placeholder="********"  
         />  
       </div>  
-  
+      <button
+      onClick={()=>setIsPasswordHidden(!isPasswordHidden)}>
+        Mostrar Contraseña
+      </button>
       <button  
         type="button"  
         onClick={()=>{onSubmit(username,password)}}  

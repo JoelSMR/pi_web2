@@ -8,24 +8,23 @@ import Loader from '../Renders/Loader'
 const LoaderContext = createContext<LoaderContextValue | undefined>(undefined)  
   
 export function LoaderProvider({ children }: { children: ReactNode }) {  
-  const [isLoading, setIsLoading] = useState<boolean>(false)  
+  const [isLoading, setIsLoading] = useState<boolean>(false) 
+  const [msg, setMsg] = useState<string>("") 
   
-  const ToggleLoaderOn = useCallback(() => {  
-    setIsLoading(true)  
-    console.log('cargando')  
+  const ToggleLoaderOn = useCallback((mensaje:string) => {  
+    setMsg(mensaje);
+    setIsLoading(true);
   }, [])  
   
   const ToggleLoaderOff = useCallback(() => {  
-    setIsLoading(false)  
-    console.log('dejando de cargar')  
+    setIsLoading(false);
   }, [])  
   
   const value = useMemo<LoaderContextValue>(  
-    () => ({  
-      isLoading,  
+    () => ({isLoading,  
       ToggleLoaderOn,  
       ToggleLoaderOff,  
-      setIsLoading: setIsLoading,  
+      setLoading: setIsLoading    
     }),  
     [isLoading, ToggleLoaderOn, ToggleLoaderOff]  
   )  
@@ -33,7 +32,7 @@ export function LoaderProvider({ children }: { children: ReactNode }) {
   return (  
     <LoaderContext.Provider value={value}>  
       {/* Render global del loader para que aparezca en toda la app */}  
-      {isLoading ? <Loader /> : null}  
+      {isLoading ? <Loader message={msg?msg:'...'} /> : null}  
       {children}  
     </LoaderContext.Provider>  
   )  

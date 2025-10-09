@@ -10,7 +10,7 @@ const useLoader = () => {
     // Lo dejamos como no-op para mantener compatibilidad. Si prefieres, elimina RenderLoader.
   }
 
-  return { ToggleLoaderOn, ToggleLoaderOff, RenderLoader, isLoading }
+  return { ToggleLoaderOn, ToggleLoaderOff, RenderLoader }
 }
 
 export default useLoader
