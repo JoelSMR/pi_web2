@@ -7,10 +7,16 @@ import com.example.user.entity.User;
 
 import java.util.Optional;
 
-@Repository
+@Repository 
+// Heredamos de JpaRepository para obtener todos los métodos CRUD básicos 
+// (save, findById, findAll, delete, etc.)
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByUsername(String username);
-    boolean existsByUsername(String username);
+    /**
+     * Método personalizado para el CheckLoginUseCase.
+     * Spring Data JPA genera automáticamente la consulta: SELECT * FROM users WHERE email = ?
+     * @param email El correo electrónico a buscar.
+     * @return Un Optional<User> que contiene el usuario si se encuentra.
+     */
     Optional<com.example.usuario.entity.User> findByEmail(String email);
 }

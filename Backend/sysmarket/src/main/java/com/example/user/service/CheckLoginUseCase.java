@@ -3,6 +3,7 @@ package com.example.user.service;
 import org.springframework.stereotype.Service;
 
 import com.example.user.repository.UserRepository;
+import com.example.usuario.entity.User;
 
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public class CheckLoginUseCase {
         
         // 1. Buscar al usuario por email
         // Asumimos que UserRepository tiene un método findByEmail() (lo crearemos luego)
-        Optional<com.example.usuario.entity.User> userOptional = 
+        Optional<User> userOptional = 
             userRepository.findByEmail(email);
 
         // 2. Si el usuario no existe, retornar false
