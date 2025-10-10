@@ -1,5 +1,5 @@
 import React from 'react'
-import FetchProductView from '../../GlobalComponents/Renders/FetchProductView'
+import FetchProductView from './Components/FetchProductView'
 
 const page = () => {
   return (

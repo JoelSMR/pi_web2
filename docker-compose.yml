@@ -1,3 +1,13 @@
+volumes:  
+  mysqldata:
+
+networks:
+  Data-Back:
+    driver: bridge
+  Front-Back:
+    driver: bridge
+  
+
 services:
   db:
     image: docker.io/library/mysql:8.4
@@ -22,7 +32,7 @@ services:
       timeout: 5s
       retries: 10
     networks:
-      - conectionService
+      - Data-Back
 
   app:
     build:
@@ -36,7 +46,7 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:mysql://demo_mysql:3306/appdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       db_username: appuser
-      db_password: 
+      db_password: pword
     ports:
       - "8080:8080"
     read_only: true
@@ -48,11 +58,23 @@ services:
       - no-new-privileges:true
     # Distroless ya corre como non-root (uid 65532). Si usas otra imagen, añade USER no-root.
     networks:
-      - conectionService
-volumes:  
-  mysqldata:
-#
-networks:
-  conectionService:
-    driver: bridge
-#
+      - Data-Back
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_AUTH_API_URL= http://app:8080/api/v1/user
+        - NEXT_PUBLIC_PRODUCT_API_URL= http://app:8080/api/v1/products
+        - NEXT_PUBLIC_PROVIDER_API_URL= http://app:8080/api/v1/proveedor
+    
+    container_name: demo_frontend
+    depends_on:
+      - app
+    ports:
+      - "3000:3000"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - Front-Back

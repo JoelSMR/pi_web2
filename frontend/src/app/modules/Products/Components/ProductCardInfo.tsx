@@ -2,8 +2,8 @@ import React from 'react'
 import { Product } from '../Models/ProductModels'
 
 interface CardInfoProps extends Product{
-    onEdit?:()=> Promise<void> | void,
-    onDelete?: ()=>Promise<void> | void
+    onEdit?:(id:number)=> Promise<void> | void,
+    onDelete?: (id:number)=>Promise<void> | void
 }
 
 const CardInfo:React.FC<CardInfoProps> = ({id, price, name, description, category,onEdit, onDelete }) => {
@@ -43,14 +43,14 @@ const CardInfo:React.FC<CardInfoProps> = ({id, price, name, description, categor
       {/* Footer / Actions (opcional) */}  
       <div className="border-t border-slate-200 bg-slate-50 px-4 py-3 text-right dark:border-slate-700 dark:bg-slate-900/40">  
         <button  
-          onClick={onEdit}
+          onClick={()=>onEdit}
           type="button"  
           className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:ring-offset-slate-800"  
         >  
           Editar  
         </button>
         <button
-          onClick={onDelete}
+          onClick={()=>onDelete}
           type="button"  
           className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:ring-offset-slate-800"  
         >  
