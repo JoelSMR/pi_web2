@@ -2,7 +2,7 @@ package com.example.productos.controller;
 
 
 import com.example.productos.entity.Product;
-import com.example.productos.repository.ProductRepository;
+//import com.example.productos.repository.ProductRepository;
 import com.example.productos.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +27,21 @@ public class ProductController {
         return productService.getProduct(productId);
     }
 
+    @PutMapping("/{productId}")
+    public Product updateProduct(@PathVariable("productId") Long productId, @RequestBody Product product) {
+    return productService.updateProduct(productId, product);
+    }
+
+    @PostMapping("/save")
+    public Product save(@RequestBody Product product) {
+        return productService.save(product);
+    }
+
     @PostMapping
     public void saveOrUpdate(@RequestBody Product product) {
         productService.saveOrUpdate(product);
     }
+
 
     @DeleteMapping("/{productId}")
     public void saveOrUpdate(@PathVariable("productId") Long productId) {
