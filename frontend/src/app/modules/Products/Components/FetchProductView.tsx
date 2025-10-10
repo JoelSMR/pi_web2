@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from 'react'
 import ProductService from '@/app/api/ProductService'
-import useLoader from '../../../GlobalComponents/CustomHooks/useLoader'
-import { Product } from '../Models/ProductModels'
-import CardInfo from './ProductCardInfo'
+import useLoader from '../CustomHooks/useLoader'
+import { Product } from '../../modules/Products/Models/ProductModels'
+import CardInfo from '../../modules/Products/Components/ProductCardInfo'
 import ConfirmationModal from '@/app/GlobalComponents/Renders/ConfirmationModal'
 
 
