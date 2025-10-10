@@ -18,7 +18,7 @@ public class Product {
     private String category;
 
     @ManyToOne
-    @JoinColumn(name = "proveedor_id") // nombre de la columna FK en la BD
+    @JoinColumn(name = "proveedorId") 
     private Proveedor proveedor;
 
 }
