@@ -1,10 +1,10 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/alpine
 {
-	"name": "Debian",
+	"name": "Ubuntu",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:debian",
-	"features": {
+	"image": "mcr.microsoft.com/devcontainers/base:noble",
+	 "features":{
 		"ghcr.io/devcontainers/features/java:1": {
 			"installMaven": true,
 			"version": "latest",
@@ -27,7 +27,8 @@
 				"vscjava.vscode-java-pack",
 				"Oracle.oracle-java",
 				"vmware.vscode-boot-dev-pack",
-				"bradlc.vscode-tailwindcss"
+				"bradlc.vscode-tailwindcss",
+				"ms-azuretools.vscode-containers"
 			]
 		}
 	}

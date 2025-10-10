@@ -3,7 +3,7 @@
 {
 	"name": "Integration_Frontend",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:debian",
+	"image": "mcr.microsoft.com/devcontainers/base:noble",
 	"features": {
 		"ghcr.io/devcontainers/features/node:1": {
 			"nodeGypDependencies": true,
@@ -15,10 +15,12 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"bradlc.vscode-tailwindcss"
+				"bradlc.vscode-tailwindcss",
+				"ms-azuretools.vscode-containers",
+				"dsznajder.es7-react-js-snippets"
 			]
 		}
-	}
+	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -27,7 +29,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "uname -a",
+	"postCreateCommand": " npm install -g npm@11.6.1 && npm install"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
