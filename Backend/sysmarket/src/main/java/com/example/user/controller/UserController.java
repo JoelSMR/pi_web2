@@ -5,11 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.user.entity.User;
-import com.example.user.service.CheckLoginUseCase;
-import com.example.user.service.CreateUserUseCase;
-import com.example.user.service.DeleteUserUseCase;
-import com.example.user.service.RetrieveAllUsersUseCase;
-import com.example.user.service.UpdateUserUseCase;
+import com.example.user.service.UserCrudUseCase;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,26 +14,12 @@ import java.util.Optional;
 @RequestMapping(path = "api/v1/user") 
 public class UserController {
 
-    // 1. DECLARACIÓN DE USECASES
-    private final CreateUserUseCase createUserUseCase;
-    private final RetrieveAllUsersUseCase retrieveAllUsersUseCase;
-    private final UpdateUserUseCase updateUserUseCase;
-    private final DeleteUserUseCase deleteUserUseCase;
-    private final CheckLoginUseCase checkLoginUseCase; // Caso de uso especial
+    // Única inyección necesaria: el UseCase consolidado
+    private final UserCrudUseCase userCrudUseCase;
 
-    // 2. INYECCIÓN DE USECASES 
-    public UserController(
-        CreateUserUseCase createUserUseCase,
-        RetrieveAllUsersUseCase retrieveAllUsersUseCase,
-        UpdateUserUseCase updateUserUseCase,
-        DeleteUserUseCase deleteUserUseCase,
-        CheckLoginUseCase checkLoginUseCase) {
-        
-        this.createUserUseCase = createUserUseCase;
-        this.retrieveAllUsersUseCase = retrieveAllUsersUseCase;
-        this.updateUserUseCase = updateUserUseCase;
-        this.deleteUserUseCase = deleteUserUseCase;
-        this.checkLoginUseCase = checkLoginUseCase;
+    // Inyección a través del constructor
+    public UserController(UserCrudUseCase userCrudUseCase) {
+        this.userCrudUseCase = userCrudUseCase;
     }
 
     // --- ENDPOINTS CRUD ---
@@ -45,8 +27,8 @@ public class UserController {
     @PostMapping // POST /usuarios
     public ResponseEntity<User> create(@RequestBody User user) {
         try {
-            User createdUser = createUserUseCase.execute(user);
-            // Retorna 201 Created y el objeto del usuario creado
+            // Llama al método CREATE del UseCase
+            User createdUser = userCrudUseCase.create(user);
             return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
         } catch (RuntimeException e) {
             // Manejo simple para el ejemplo de email duplicado
@@ -56,16 +38,17 @@ public class UserController {
 
     @GetMapping // GET /usuarios
     public ResponseEntity<List<User>> getAll() {
-        List<User> users = retrieveAllUsersUseCase.execute();
+        // Llama al método FIND ALL del UseCase
+        List<User> users = userCrudUseCase.findAll();
         return ResponseEntity.ok(users); // Retorna 200 OK
     }
 
     @PutMapping("/{id}") // PUT /usuarios/{id}
     public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User userDetails) {
-        // Aseguramos que el ID del path esté en el objeto para el UseCase
         userDetails.setId(id); 
         
-        Optional<User> updatedUser = updateUserUseCase.execute(userDetails);
+        // Llama al método UPDATE del UseCase
+        Optional<User> updatedUser = userCrudUseCase.update(userDetails);
         
         // Retorna 200 OK si existe, 404 Not Found si no
         return updatedUser
@@ -76,7 +59,8 @@ public class UserController {
     @DeleteMapping("/{id}") // DELETE /usuarios/{id}
     @ResponseStatus(HttpStatus.NO_CONTENT) // Retorna 204 No Content
     public void delete(@PathVariable Long id) {
-        deleteUserUseCase.execute(id);
+        // Llama al método DELETE del UseCase
+        userCrudUseCase.deleteById(id);
     }
 
     // --- ENDPOINT ESPECIAL DE LOGIN ---
@@ -90,7 +74,8 @@ public class UserController {
     @PostMapping("/login") // POST /usuarios/login
     public ResponseEntity<Boolean> checkLogin(@RequestBody LoginRequest loginRequest) {
         
-        boolean isValid = checkLoginUseCase.check(
+        // Llama al método CHECK LOGIN del UseCase
+        boolean isValid = userCrudUseCase.checkLogin(
             loginRequest.email, 
             loginRequest.password
         );
