@@ -3,7 +3,7 @@ package com.example.user.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+// Class of Entity of the User
 @Data
 @NoArgsConstructor
 @Entity

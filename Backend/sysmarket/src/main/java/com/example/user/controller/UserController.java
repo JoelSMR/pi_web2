@@ -11,6 +11,7 @@ import com.example.user.service.UserService;
 import java.util.List;
 import java.util.Optional;
 
+// Controller of the CRUD of the user
 @RestController
 @RequestMapping("/api/v1/users") 
 public class UserController {
