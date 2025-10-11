@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ProductService from '@/app/api/ProductService'
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader'
 import { Product } from '../Models/ProductModels'
@@ -8,90 +8,103 @@ import CardInfo from './ProductCardInfo'
 import ConfirmationModal from '@/app/GlobalComponents/Renders/ConfirmationModal'
 import EditProductModal from './EditProductModal'
 
-
-
 const FetchProductView = () => {
-    const {ToggleLoaderOn ,ToggleLoaderOff} = useLoader();
-    const [products, setProducts] = useState<Product[]>([]);
-    const [isDeleteConfirmationModalOpen,setIsDeleteConfirmationModalOpen] = useState<boolean>(false);
-    const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-    const [selectedId, setSelectedId] = useState<number>(0);
+  const { ToggleLoaderOn, ToggleLoaderOff } = useLoader()
+  const [products, setProducts] = useState<Product[]>([])
+  const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [selectedId, setSelectedId] = useState<number>(0)
 
+  // Abre modal de confirmación
+  const handleDeleteProduct = useCallback((id: number) => {
+    setSelectedId(id)
+    setIsDeleteConfirmationModalOpen(true)
+  }, [])
 
-    useEffect(()=>{
-      handleFetchAllUsersHook()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+  const hideDeleteConfirmationModal = useCallback(() => {
+    setIsDeleteConfirmationModalOpen(false)
+  }, [])
 
-    const handleDeleteProduct=(id:number)=>{
-      setIsDeleteConfirmationModalOpen(true);
-      setSelectedId(id);
+  const handleConfirmDeleteProduct = useCallback(async () => {
+    try {
+      ToggleLoaderOn('Eliminando Producto...')
+      hideDeleteConfirmationModal()
+      // await ProductService.deleteProductById(selectedId)
+      // setProducts((prev) => prev.filter(p => p.id !== selectedId))
+    } catch (e) {
+      console.error(e)
+    } finally {
+      ToggleLoaderOff()
     }
-    const hideDeleteConfirmationModal=()=>{
-      setIsDeleteConfirmationModalOpen(false);
-    }
+  }, [ToggleLoaderOn, ToggleLoaderOff, hideDeleteConfirmationModal /*, selectedId*/])
 
-    const handleConfirmDeleteProduct = async()=>{
-      ToggleLoaderOn("Eliminando Producto...");
-      hideDeleteConfirmationModal();
-      //const response = await ProductService.deleteProductById(1);
-      ToggleLoaderOff();
-    }
+  // Abre/cierra modal de edición
+  const handleEditProduct = useCallback((id: number) => {
+    setSelectedId(id)
+    setIsEditModalOpen(true)
+  }, [])
 
-    //Cierra el Modal Formualrio de Edicion
-    const hideEditModal=()=>{
-      setIsEditModalOpen(false);
-    }
-    //Abre el modal Formulario de edicion y establece IdSeleccioando
-    const handleEditProduct=(id:number)=>{
-      setIsEditModalOpen(true);
-      setSelectedId(id);
-    }
-    
-    //Aplica la logica final al confirmar la edicion
-    const handleConfirmEditProduct=async()=>{
-      try{
-      ToggleLoaderOn("Editando Producto...");
+  const hideEditModal = useCallback(() => setIsEditModalOpen(false), [])
 
+  // Confirmar edición (recibe los cambios desde el modal)
+  const handleConfirmEditProduct = useCallback(async () => {
+    try {
+      ToggleLoaderOn('Editando Producto...')
+      // const updated = await ProductService.updateProduct(selectedId, updatedData)
+      // setProducts(prev => prev.map(p => p.id === updated.id ? updated : p))
+      setIsEditModalOpen(false)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      ToggleLoaderOff()
+    }
+  }, [ToggleLoaderOn, ToggleLoaderOff /*, selectedId*/])
 
-      }catch(error){console.log(error) ;}
-      finally{
-      ToggleLoaderOff();
-      }
+  const handleFetchAllUsersHook = useCallback(async () => {
+    try {
+      ToggleLoaderOn('Buscando Productos ...')
+      const data = await ProductService.getAllProducts()
+      setProducts(
+        Array.isArray(data)
+          ? data
+          : [{ id: 1, category: 'categoria', description: 'descripcion', name: 'nombre', price: 12.0 }]
+      )
+    } catch (error) {
+      console.log(error)
+    } finally {
+      ToggleLoaderOff()
     }
-    
-    const handleFetchAllUsersHook=async()=>{
-        try{ToggleLoaderOn("Buscando Productos ...");
-        const data = await ProductService.getAllProducts()
-        setProducts(Array.isArray(data)? data:[{"id":1,"category":"categoria","description":"descripcion","name":"nombre","price":12.0}]);
-        }catch(error){console.log(error);}
-        finally{ToggleLoaderOff();}
-    }
+  }, [ToggleLoaderOn, ToggleLoaderOff])
 
   return (
     <React.Fragment>
-    <ConfirmationModal 
-       isOpen={isDeleteConfirmationModalOpen}  onAccept={handleConfirmDeleteProduct}
-      onClose={()=>setIsDeleteConfirmationModalOpen(false)} 
-    />
+      <button onClick={handleFetchAllUsersHook}>Traer productos</button>
 
-    <EditProductModal 
-      isEditModalOpen={isEditModalOpen} onClose={hideEditModal}
-      onConfirmFunction={handleConfirmEditProduct} elementId={selectedId} 
-    />
+      <ConfirmationModal
+        isOpen={isDeleteConfirmationModalOpen}
+        onAccept={handleConfirmDeleteProduct}
+        onClose={hideDeleteConfirmationModal}
+      />
 
+      <EditProductModal
+        isEditModalOpen={isEditModalOpen}
+        onClose={hideEditModal}
+        onConfirmFunction={handleConfirmEditProduct}
+        elementId={selectedId}
+      />
 
-    {products.map((item)=>(
-      <React.Fragment key={item.id}>
-        <CardInfo id={item.id} category={item.category} 
-          description={item.description} name={item.name} price={item.price}
-          onDelete={()=>handleDeleteProduct(item.id)} onEdit={()=>handleEditProduct(item.id)}
+      {products.map((item) => (
+        <CardInfo
+          key={item.id}
+          id={item.id}
+          category={item.category}
+          description={item.description}
+          name={item.name}
+          price={item.price}
+          onDelete={() => handleDeleteProduct(item.id)}
+          onEdit={() => handleEditProduct(item.id)}
         />
-      </React.Fragment>
-        
-        
-    ))}
-
+      ))}
     </React.Fragment>
   )
 }
