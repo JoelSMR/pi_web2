@@ -26,12 +26,6 @@ const ConfirmationModal:React.FC<ConfirmationModalProps> = ({isOpen, onAccept, o
       >  
         <div className="mb-6 text-sm text-gray-700 dark:text-gray-200">  
 
-        <p>Esta acción no se puede deshacer.</p>
-        <br />
-        <p>Al llevar a cabo esta accion, se asociará tu usuario con la ejecucion de esta accion.</p>
-        <br />
-        <p>El registro de Logs de Ejecucion Almacena la Informacion de Quien Ejecuto, Cuando y Que información Transformo</p>
-        <br />
         <h1>¿Seguro de querer continuar?</h1>
 
 

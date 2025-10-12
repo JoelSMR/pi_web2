@@ -1,6 +1,6 @@
 import { axiosProviderInstance } from "./AxiosServiceFactory";
 
-export class ProductService{
+export class ProviderService{
     private static api= axiosProviderInstance
 
     static getAllProviders =async()=>{

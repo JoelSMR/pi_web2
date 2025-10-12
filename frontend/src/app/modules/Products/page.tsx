@@ -1,10 +1,14 @@
 import React from 'react'
-import FetchProductView from './Components/FetchProductView'
+import ProductsListView from './Components/ProductView'
+
 
 const page = () => {
+  
+
   return (
     <React.Fragment>
-        <FetchProductView />
+        {/* <FetchProductView /> */}
+        <ProductsListView/>
     </React.Fragment>
   )
 }

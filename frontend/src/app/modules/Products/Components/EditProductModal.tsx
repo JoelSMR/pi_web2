@@ -4,6 +4,7 @@ import FormModal from '@/app/GlobalComponents/Renders/FormModal'
 import ProductService from '@/app/api/ProductService'
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader'
 import { Product } from '../Models/ProductModels'
+import ConfirmationModal from '@/app/GlobalComponents/Renders/ConfirmationModal'
 
 interface EditModalProps {
   isEditModalOpen: boolean
@@ -37,7 +38,8 @@ const EditProductModal: React.FC<EditModalProps> = ({
     description: '',
     category: '',
   })
-  const [errors, setErrors] = useState<Errors>({})
+  const [errors, setErrors] = useState<Errors>({});
+  const [isConfirmEditOpen, setIsConfirmEditOpen] = useState<boolean>(false);
 
   // IDs para labels
   const ids = useMemo(
@@ -75,6 +77,16 @@ const EditProductModal: React.FC<EditModalProps> = ({
 
   if (!isEditModalOpen) return null
 
+  const resetValues=()=>{ 
+    setValues({
+      id: '',
+      price: '',
+      name: '',
+      description: '',
+      category: ''
+      })
+    }
+
   const setField = (name: keyof FormValues, val: string) =>
     setValues((v) => ({ ...v, [name]: val }))
 
@@ -103,21 +115,27 @@ const EditProductModal: React.FC<EditModalProps> = ({
     description: values.description.trim(),
     category: values.category.trim(),
   })
-
+  
+  const openConfirmEdit=()=>{
+    setIsConfirmEditOpen(true);
+  }
   const handleSubmit = async () => {
-    const e = validate()
-    setErrors(e)
+    const e = validate();
+    setErrors(e);
     if (Object.keys(e).length > 0) return
-    const payload = buildPayload()
-    await onConfirmFunction(payload)
+    const payload = buildPayload();
+    await onConfirmFunction(payload);
+    resetValues();
   }
 
   return (
+    <React.Fragment>
+
     <FormModal
       isOpen={isEditModalOpen}
       //Envia el comportamiento de onClose hacia su padre
       onClose={onClose}
-      onConfirm={handleSubmit}
+      onConfirm={openConfirmEdit}
       confirmText="Editar"
       title="Editar producto"
       className="max-w-4xl"
@@ -246,6 +264,10 @@ const EditProductModal: React.FC<EditModalProps> = ({
         </div>
       </form>
     </FormModal>
+
+     {/* Muestra Modal Confrimar Edicion */}
+      <ConfirmationModal isOpen={isConfirmEditOpen} onAccept={handleSubmit} onClose={()=>setIsConfirmEditOpen(false)}/>
+    </React.Fragment>
   )
 }
 

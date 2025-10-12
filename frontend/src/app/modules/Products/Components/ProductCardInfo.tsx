@@ -2,7 +2,7 @@ import React from 'react'
 import { Product } from '../Models/ProductModels'
 
 interface CardInfoProps extends Product{
-    onEdit?:(id:number)=> void,
+    onEdit?:(id:number)=> void | Promise<void>,
     onDelete?: (id:number)=> void
 }
 

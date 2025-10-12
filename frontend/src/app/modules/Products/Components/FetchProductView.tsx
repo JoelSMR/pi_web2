@@ -79,13 +79,17 @@ const FetchProductView = () => {
 
   return (
     <React.Fragment>
+
       <RefreshButton onRefresh={handleFetchAllUsersHook} label='Refrescar Productos' />
+      
+      {/* Delete Confirmation Modal */}
       <ConfirmationModal
         isOpen={isDeleteConfirmationModalOpen}
         onAccept={handleConfirmDeleteProduct}
         onClose={hideDeleteConfirmationModal}
       />
 
+      {/* Edit Params Modal */}
       <EditProductModal
         isEditModalOpen={isEditModalOpen}
         onClose={hideEditModal}
@@ -93,8 +97,9 @@ const FetchProductView = () => {
         elementId={selectedId}
       />
 
-      
+      {/* Item mapper */}
       {products.map((item) => (
+        // CardInfo Component being mapped
         <CardInfo
           key={item.id}
           id={item.id}
