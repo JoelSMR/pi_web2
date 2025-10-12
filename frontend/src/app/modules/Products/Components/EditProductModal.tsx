@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useMemo, useState } from 'react'
 import FormModal from '@/app/GlobalComponents/Renders/FormModal'
-import ProductService from '@/app/api/ProductService'
+import ProductService from '@/app/util/api/ProductService'
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader'
 import { Product } from '../Models/ProductModels'
 import ConfirmationModal from '@/app/GlobalComponents/Renders/ConfirmationModal'

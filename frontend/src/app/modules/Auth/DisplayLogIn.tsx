@@ -1,7 +1,7 @@
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader';
 import React from 'react'
 import LogInForm from './Components/LogInForm';
-import { AuthService } from '@/app/api/AuthService';
+import { AuthService } from '@/app/util/api/AuthService';
 import Router from 'next/router';
 
 const DisplayLogIn = () => {
