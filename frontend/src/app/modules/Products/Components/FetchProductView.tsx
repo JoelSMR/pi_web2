@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import ProductService from '@/app/api/ProductService'
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader'
 import { Product } from '../Models/ProductModels'
 import CardInfo from './ProductCardInfo'
 import ConfirmationModal from '@/app/GlobalComponents/Renders/ConfirmationModal'
 import EditProductModal from './EditProductModal'
+import RefreshButton from '@/app/GlobalComponents/Renders/RefreshButton'
 
 const FetchProductView = () => {
   const { ToggleLoaderOn, ToggleLoaderOff } = useLoader()
@@ -78,8 +79,7 @@ const FetchProductView = () => {
 
   return (
     <React.Fragment>
-      <button onClick={handleFetchAllUsersHook}>Traer productos</button>
-
+      <RefreshButton onRefresh={handleFetchAllUsersHook} label='Refrescar Productos' />
       <ConfirmationModal
         isOpen={isDeleteConfirmationModalOpen}
         onAccept={handleConfirmDeleteProduct}
@@ -93,6 +93,7 @@ const FetchProductView = () => {
         elementId={selectedId}
       />
 
+      
       {products.map((item) => (
         <CardInfo
           key={item.id}
