@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useMemo, useState } from 'react'
 import FormModal from '@/app/GlobalComponents/Renders/FormModal'
-import ProductService from '@/app/util/api/ProductService'
+import ProductService from '@/app/util/api/Service/ProductService'
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader'
 import { Product } from '../Models/ProductModels'
 import ConfirmationModal from '@/app/GlobalComponents/Renders/ConfirmationModal'
@@ -9,7 +9,7 @@ import ConfirmationModal from '@/app/GlobalComponents/Renders/ConfirmationModal'
 interface EditModalProps {
   isEditModalOpen: boolean
   onClose: () => void
-  onConfirmFunction: (updated: Product) => void | Promise<void>
+  onConfirmFunction: (id:number,nproduct: Product) => void | Promise<void>
   elementId: number
 }
 
@@ -124,7 +124,7 @@ const EditProductModal: React.FC<EditModalProps> = ({
     setErrors(e);
     if (Object.keys(e).length > 0) return
     const payload = buildPayload();
-    await onConfirmFunction(payload);
+    await onConfirmFunction(elementId,payload);
     resetValues();
   }
 

@@ -7,7 +7,6 @@ const page = () => {
 
   return (
     <React.Fragment>
-        {/* <FetchProductView /> */}
         <ProductsListView/>
     </React.Fragment>
   )

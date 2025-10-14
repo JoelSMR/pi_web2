@@ -2,11 +2,12 @@ import React from 'react'
 import { Product } from '../Models/ProductModels'
 
 interface CardInfoProps extends Product{
-    onEdit?:(id:number)=> void | Promise<void>,
-    onDelete?: (id:number)=> void
+    onEdit?:(id:number,nProducto:Product)=> void | Promise<void>,
+    onDelete?: (id:number)=> void | Promise<void>
+    selectedItem:(Product)
 }
 
-const CardInfo:React.FC<CardInfoProps> = ({id, price, name, description, category,onEdit, onDelete }) => {
+const CardInfo:React.FC<CardInfoProps> = ({id, price, name, description, category,onEdit, onDelete , selectedItem}) => {
   return (
     <article  
       className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md dark:border-slate-700 dark:bg-slate-800"  
@@ -43,7 +44,7 @@ const CardInfo:React.FC<CardInfoProps> = ({id, price, name, description, categor
       {/* Footer / Actions (opcional) */}  
       <div className="border-t border-slate-200 bg-slate-50 px-4 py-3 text-right dark:border-slate-700 dark:bg-slate-900/40">  
         <button  
-          onClick={()=>onEdit?.(id)}
+          onClick={()=>onEdit?.(id,selectedItem)}
           type="button"  
           className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:ring-offset-slate-800"  
         >  

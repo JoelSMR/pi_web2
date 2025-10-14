@@ -1,7 +1,7 @@
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader';
 import React from 'react'
 import LogInForm from './Components/LogInForm';
-import { AuthService } from '@/app/util/api/AuthService';
+import { AuthService } from '@/app/util/api/Service/AuthService';
 import Router from 'next/router';
 
 const DisplayLogIn = () => {
@@ -12,7 +12,7 @@ const DisplayLogIn = () => {
       try{
       ToggleLoaderOn("Comprobando Inicio de Sesion...");
       const isRegistered = await AuthService.LogInUser(username,password);
-      if (isRegistered) router.push("/");
+      if (isRegistered) router.push("/modules/Dashboard/Renders/Products");
     }finally{
       ToggleLoaderOff();
     }
