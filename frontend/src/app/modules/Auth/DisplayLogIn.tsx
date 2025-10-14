@@ -1,21 +1,21 @@
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader';
 import React from 'react'
 import LogInForm from './Components/LogInForm';
+import { AuthService } from '@/app/util/api/Service/AuthService';
+import Router from 'next/router';
 
 const DisplayLogIn = () => {
     const {ToggleLoaderOn,ToggleLoaderOff} = useLoader();
-      
+    const router = Router;    
 
     const handleLoginSubmit=async(username:string, password:string)=>{
+      try{
       ToggleLoaderOn("Comprobando Inicio de Sesion...");
-      //simulacion logica del enpoint
-      const realUser={username:"real",password:"real"};
-      await new Promise((res)=>{setTimeout(res,3000)})
-      if (username==realUser.username && password==realUser.password){
-        //login
-      };
-      //console.log("no logueo");
+      const isRegistered = await AuthService.LogInUser(username,password);
+      if (isRegistered) router.push("/modules/Dashboard/Renders/Products");
+    }finally{
       ToggleLoaderOff();
+    }
     }
 
   return (

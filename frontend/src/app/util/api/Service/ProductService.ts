@@ -1,3 +1,5 @@
+import { Product } from "@/app/modules/Dashboard/Renders/Products/Models/ProductModels";
+import {  ProductToEditProduct } from "../util/Mappers/ProductMappers";
 import { axiosProductInstance } from "./AxiosServiceFactory";
 
 export default class ProductService{
@@ -28,6 +30,14 @@ export default class ProductService{
         }
         catch(e:unknown){console.log(e || "Error en getById");            
         }
+    }
+
+    static async updateProductByid(id:number,nProduct:Product){
+        try{
+        const nEditableProduct = await ProductToEditProduct(nProduct);
+        const response = await this.api.put("/"+id.toString(),nEditableProduct);
+        return response
+        }catch(error){console.error(error)}
     }
 
     static async deleteProductById(id:number){
