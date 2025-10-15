@@ -26,6 +26,7 @@ COPY postcss.config.mjs ./
 RUN npm install -g npm@latest &&\
     npm install &&\
     npm install next@latest react@latest react-dom@latest
+
 # Copiamos todo el código fuente
 COPY . .
 

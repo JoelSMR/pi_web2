@@ -17,9 +17,12 @@ export default class ProductService{
     static async getAllProducts(){
         try{
             const response = await this.api.get("/");
-            return response.data
+            const p:Product[] =  [{id:1,price:2,category:"Categoria",description:"HolaDesdeAPI",name:"Pedro"},{id:1,price:2,category:"Categoria4",description:"Hola",name:"Pedro"}]
+            return response.data??[]
+
         }catch(e:unknown){
             console.log(e || "Error en getAll");
+            return []
         }
     }
 

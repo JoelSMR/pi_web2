@@ -25,14 +25,20 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
     const {ToggleLoaderOn, ToggleLoaderOff} = useLoader();
     const [items,setItems]=useState<Product[]>(
       [
-        {id:1,price:2,category:"Categoria",description:"Hola",name:"Pedro"}
+        {id:1,price:2,category:"CategoriaCreacion",description:"CategoriaCreacion",name:"Pedro"}
       ]
     );
 
-    const fetchItems=async()=>{
+    const fetchItems=async ()=>{
         ToggleLoaderOn("Consultando Productos ...");
-        setItems( await ProductService.getAllProducts());
-        ToggleLoaderOff();
+        try{
+        const iArray=await ProductService.getAllProducts();
+        setItems([{id:1,price:2,category:"CategoriaDesde el UseEffect",description:"HolaEffect",name:"Pedro"}])
+        setItems(iArray);
+        ToggleLoaderOff();}
+        catch(error){
+          setItems([{id:1,price:2,category:"CategoriaDesde el UseEffect",description:"HolaEffect",name:"Pedro"}])
+        }
     };
     useEffect(()=>{
         fetchItems();
@@ -77,7 +83,7 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
       </div>
 
       {/* Lista de tarjetas */}
-      {(items.length === 0 || !Array.isArray(items)) ? (
+      { (items.length === 0 || !Array.isArray(items)) ? (
         <div className="rounded-lg border border-slate-200 p-8 text-center text-slate-500 dark:border-slate-700 dark:text-slate-400">
           {emptyMessage}
         </div>
