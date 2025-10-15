@@ -7,7 +7,7 @@ import { LoginFormProps } from '../Models/LogInFormModels';
 const LogInForm:React.FC<LoginFormProps> = ({onSubmit}) => {
   const [username,setUsername] = useState<string>("")
   const [password,setPassword] = useState<string>("")
-  const [isPasswordHidden, setIsPasswordHidden] = useState<boolean>(false);
+  const [isPasswordHidden, setIsPasswordHidden] = useState<boolean>(true);
 
 
   return (
@@ -54,6 +54,7 @@ const LogInForm:React.FC<LoginFormProps> = ({onSubmit}) => {
         />  
       </div>  
       <button
+      className='dark:text-white'
       onClick={()=>setIsPasswordHidden(!isPasswordHidden)}>
         Mostrar Contraseña
       </button>

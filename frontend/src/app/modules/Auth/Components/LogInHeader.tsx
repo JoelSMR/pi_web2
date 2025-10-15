@@ -1,9 +1,10 @@
 import React from 'react'
+//,{useState}
 import { LoginFormProps } from '../Models/LogInFormModels'
 
-const LogInHeader:React.FC<LoginFormProps> = ({onSubmit}) => {
-  const [username,setUsername] = useState<string>("")
-  const [password,setPassword] = useState<string>("")
+const LogInHeader:React.FC<LoginFormProps> = () => {
+  //const [username,setUsername] = useState<string>("")
+  //const [password,setPassword] = useState<string>("")
   return (
     <div>LogInHeader</div>
   )

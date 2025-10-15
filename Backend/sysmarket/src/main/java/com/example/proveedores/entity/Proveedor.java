@@ -1,5 +1,9 @@
 package com.example.proveedores.entity;
 
+import java.util.List;
+
+import com.example.productos.entity.Product;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,5 +16,7 @@ public class Proveedor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long proveedorId;
     private String name;
+    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL)
+    private List<Product> productos;
 
 }
