@@ -1,14 +1,16 @@
 package com.example.productos.controller;
 
-
 import com.example.productos.entity.Product;
 //import com.example.productos.repository.ProductRepository;
 import com.example.productos.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
+
+
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+
 
 @RestController
 @RequestMapping(path = "api/v1/products")

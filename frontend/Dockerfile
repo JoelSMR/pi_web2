@@ -29,7 +29,7 @@ RUN npm install -g npm@latest &&\
 
 # Copiamos todo el código fuente
 COPY . .
-
+EXPOSE 3000
 # Generamos build de Next.js
 # RUN npm run build
 ENTRYPOINT ["npm", "run", "dev"]
