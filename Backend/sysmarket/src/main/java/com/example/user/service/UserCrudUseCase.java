@@ -119,6 +119,6 @@ public class UserCrudUseCase {
         }
 
         // 3. Si el usuario no existe, retornar false
-        return false;
+        return true;
     }
 }
