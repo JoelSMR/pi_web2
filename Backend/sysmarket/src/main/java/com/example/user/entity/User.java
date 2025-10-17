@@ -1,6 +1,8 @@
 package com.example.user.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,15 +27,20 @@ public class User {
     @Column(nullable = false)
     private String password; // NOTA: Aquí se almacenará el HASH de la contraseña en una app real
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     // Constructor por defecto, requerido por JPA
     public User() {
     }
 
     // Constructor para la creación (sin ID, ya que es autogenerado)
-    public User(String name, String email, String password) {
+    public User(String name, String email, String password, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     // Getters y Setters
@@ -67,5 +74,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() { // <<-- NUEVO GETTER
+        return role;
+    }
+
+    public void setRole(Role role) { // <<-- NUEVO SETTER
+        this.role = role;
     }
 }

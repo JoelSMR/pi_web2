@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.user.entity.User;
 import com.example.user.service.UserCrudUseCase;
-
+import com.example.user.entity.Role;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,45 +22,66 @@ public class UserController {
         this.userCrudUseCase = userCrudUseCase;
     }
 
-    // --- ENDPOINTS CRUD ---
+    @PostMapping 
+    public ResponseEntity<User> create(@RequestHeader("X-User-Email") String authEmail, @RequestBody User user) { // <<-- RECIBE HEADER
+        // 1. Verificar Permiso: Solo EDITOR o ADMIN pueden crear
+        if (!userCrudUseCase.hasPermission(authEmail, Role.EDITOR)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403 Forbidden
+        }
 
-    @PostMapping // POST /usuarios
-    public ResponseEntity<User> create(@RequestBody User user) {
+        // 2. Ejecutar la lógica de creación si tiene permiso
         try {
-            // Llama al método CREATE del UseCase
+            // Al crear un nuevo usuario, por defecto le asignamos el rol VIEWER
+            user.setRole(Role.VIEWER); 
             User createdUser = userCrudUseCase.create(user);
             return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
         } catch (RuntimeException e) {
-            // Manejo simple para el ejemplo de email duplicado
-            return new ResponseEntity<>(HttpStatus.CONFLICT); // 409 Conflict
+            return new ResponseEntity<>(HttpStatus.CONFLICT); 
         }
     }
 
-    @GetMapping // GET /usuarios
-    public ResponseEntity<List<User>> getAll() {
-        // Llama al método FIND ALL del UseCase
+    // 2. GET ALL (Requiere VIEWER, EDITOR o ADMIN)
+    @GetMapping 
+    public ResponseEntity<List<User>> getAll(@RequestHeader("X-User-Email") String authEmail) { // <<-- RECIBE HEADER
+        // 1. Verificar Permiso: Cualquier rol (VIEWER o superior) puede leer
+        if (!userCrudUseCase.hasPermission(authEmail, Role.VIEWER)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403 Forbidden
+        }
+
+        // 2. Ejecutar la lógica de lectura si tiene permiso
         List<User> users = userCrudUseCase.findAll();
-        return ResponseEntity.ok(users); // Retorna 200 OK
+        return ResponseEntity.ok(users); 
     }
 
-    @PutMapping("/{id}") // PUT /usuarios/{id}
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User userDetails) {
+    // 3. UPDATE (Requiere EDITOR o ADMIN)
+    @PutMapping("/{id}") 
+    public ResponseEntity<User> update(@RequestHeader("X-User-Email") String authEmail, @PathVariable Long id, @RequestBody User userDetails) {
+        // 1. Verificar Permiso: Solo EDITOR o ADMIN pueden actualizar
+        if (!userCrudUseCase.hasPermission(authEmail, Role.EDITOR)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403 Forbidden
+        }
+
+        // 2. Ejecutar la lógica de actualización
         userDetails.setId(id); 
-        
-        // Llama al método UPDATE del UseCase
         Optional<User> updatedUser = userCrudUseCase.update(userDetails);
         
-        // Retorna 200 OK si existe, 404 Not Found si no
         return updatedUser
             .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/{id}") // DELETE /usuarios/{id}
-    @ResponseStatus(HttpStatus.NO_CONTENT) // Retorna 204 No Content
-    public void delete(@PathVariable Long id) {
-        // Llama al método DELETE del UseCase
+    // 4. DELETE (Requiere solo ADMIN)
+    @DeleteMapping("/{id}") 
+    @ResponseStatus(HttpStatus.NO_CONTENT) 
+    public ResponseEntity<Void> delete(@RequestHeader("X-User-Email") String authEmail, @PathVariable Long id) {
+        // 1. Verificar Permiso: Solo ADMIN puede eliminar
+        if (!userCrudUseCase.hasPermission(authEmail, Role.ADMIN)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403 Forbidden
+        }
+
+        // 2. Ejecutar la lógica de eliminación
         userCrudUseCase.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // --- ENDPOINT ESPECIAL DE LOGIN ---
