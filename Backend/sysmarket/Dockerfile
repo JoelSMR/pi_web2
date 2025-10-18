@@ -1,32 +1,86 @@
-# syntax=docker/dockerfile:1.7
+# # Imagen única con Maven + JDK 21 (compila y ejecuta)
+# FROM maven:3.9.9-eclipse-temurin-21-alpine
 
-# Imagen única con Maven + JDK 21 (compila y ejecuta)
-FROM maven:3.9.9-eclipse-temurin-21-alpine
+# # Directorio de trabajo
+# WORKDIR /app
 
-# Directorio de trabajo
+# # 1) Copiamos solo el pom para cachear dependencias
+# COPY pom.xml ./
+
+# # Opcional: calentar dependencias para cache (acelera builds)
+# RUN --mount=type=cache,target=/root/.m2 \
+#     mvn -B -q -DskipTests dependency:go-offline
+
+# # 2) Copiamos el código fuente
+# COPY src ./src
+
+# # 3) Compilamos el JAR (reempacado por Spring Boot)
+# RUN --mount=type=cache,target=/root/.m2 \
+#     mvn -B -DskipTests clean package
+
+# # Puerto de la app
+# EXPOSE 8080
+
+# # Ajustes JVM opcionales
+# ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75 -XX:+ExitOnOutOfMemoryError -Djava.security.egd=file:/dev/urandom"
+
+# # 4) Ejecutamos el JAR correcto (evitando original- y -plain)
+# CMD sh -c 'JAR=$(ls -1 target/*.jar | grep -v -E "/original-.*\\.jar$|\\-plain\\.jar$" | head -n1) \
+#   && echo "Running $JAR" \
+#   && java -jar "$JAR"'
+
+
+# ============ STAGE 1: BUILDER ============
+FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
+
 WORKDIR /app
 
-# 1) Copiamos solo el pom para cachear dependencias
+# 1) Copiamos sólo el POM para cachear dependencias
 COPY pom.xml ./
 
-# Opcional: calentar dependencias para cache (acelera builds)
+# Calentar dependencias (cache Maven)
 RUN --mount=type=cache,target=/root/.m2 \
     mvn -B -q -DskipTests dependency:go-offline
 
 # 2) Copiamos el código fuente
 COPY src ./src
 
-# 3) Compilamos el JAR (reempacado por Spring Boot)
+# 3) Compilamos el JAR (Spring Boot reempacado)
 RUN --mount=type=cache,target=/root/.m2 \
     mvn -B -DskipTests clean package
+
+# Determinamos el jar final (evitar original- y -plain)
+# Guardamos el nombre y copiamos a /tmp/app.jar para pasar al runner
+RUN JAR="$(ls -1 target/*.jar | grep -v -E '/original-.*\.jar$|\-plain\.jar$' | head -n1)" \
+    && echo "Selected JAR: $JAR" \
+    && cp "$JAR" /tmp/app.jar
+
+
+# ============ STAGE 2: RUNNER ============
+# Opción recomendada: JRE Temurin 21 sobre Alpine (ligero y listo para producción)
+FROM eclipse-temurin:21-jre-alpine AS runner
+
+# Usuario no root por seguridad
+# (puedes ajustar UID/GID si tu entorno lo requiere)
+RUN addgroup -S app && adduser -S app -G app
+
+WORKDIR /app
+
+# Copiamos sólo el artefacto construido
+COPY --from=builder /tmp/app.jar /app/app.jar
 
 # Puerto de la app
 EXPOSE 8080
 
-# Ajustes JVM opcionales
+# Ajustes JVM
 ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75 -XX:+ExitOnOutOfMemoryError -Djava.security.egd=file:/dev/urandom"
 
-# 4) Ejecutamos el JAR correcto (evitando original- y -plain)
-CMD sh -c 'JAR=$(ls -1 target/*.jar | grep -v -E "/original-.*\\.jar$|\\-plain\\.jar$" | head -n1) \
-  && echo "Running $JAR" \
-  && java -jar "$JAR"'
+# Salud opcional (si tienes actuator /health)
+# HEALTHCHECK --interval=30s --timeout=3s --start-period=20s --retries=3 \
+#   CMD wget -qO- http://localhost:8080/actuator/health | grep '"status":"UP"' || exit 1
+
+# Cambiamos a usuario no root
+USER app
+
+# Ejecutamos
+ENTRYPOINT ["java","-jar","/app/app.jar"]
