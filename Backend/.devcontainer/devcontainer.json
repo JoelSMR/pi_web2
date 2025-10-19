@@ -3,41 +3,8 @@
 {
 	"name": "Integration_Backend",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:debian",
-	"features": {
-		"ghcr.io/devcontainers/features/java:1": {
-			"installMaven": true,
-			"version": "latest",
-			"jdkDistro": "ms",
-			"gradleVersion": "latest",
-			"mavenVersion": "latest",
-			"antVersion": "latest",
-			"groovyVersion": "latest"
-		}
-	},
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"vscjava.vscode-java-pack",
-				"Oracle.oracle-java",
-				"vmware.vscode-boot-dev-pack",
-				"ms-azuretools.vscode-containers"
-			]
-		}
-	}
-
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "uname -a",
-
-	// Configure tool-specific properties.
-	// "customizations": {},
-
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	"build": {
+        // Path is relative to the devcontainer.json file.
+    	"dockerfile": "../sysmarket/Dockerfile.dev"
+    }
 }

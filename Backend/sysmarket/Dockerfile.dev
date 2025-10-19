@@ -1,0 +1,29 @@
+# Dockerfile.dev (Spring Boot DEV)
+FROM maven:3.9.9-eclipse-temurin-21-alpine as runner
+
+# Paquetes útiles opcionales (descomenta si los necesitas)
+# RUN apk add --no-cache bash curl netcat-openbsd
+
+# Directorio de trabajo donde montaremos el proyecto
+WORKDIR /workspace
+
+COPY . .
+# Optimiza Maven en contenedor 
+ENV MAVEN_OPTS="-XX:MaxRAMPercentage=75 -Djava.security.egd=file:/dev/urandom"
+
+# Puerto de la app y debug opcional
+EXPOSE 8080 5005
+# Comando por defecto: arrancar en caliente (perfil dev)
+# - Usa mvnw si lo tienes; fallback a mvn si no
+ENTRYPOINT sh -lc '\  
+  echo "PWD: $PWD"; ls -la | sed -n "1,50p"; \  
+  if [ ! -f pom.xml ]; then echo "ERROR: No se encontró pom.xml en $PWD"; exit 1; fi; \  
+  if [ -x "./mvnw" ]; then \  
+    ./mvnw -B -DskipTests org.springframework.boot:spring-boot-maven-plugin:3.3.5:run \  
+      -Dspring-boot.run.profiles=dev \  
+      -Dspring-boot.run.jvmArguments="-Dspring.devtools.restart.poll-interval=1s -Dspring.devtools.restart.quiet-period=400ms -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"; \  
+  else \  
+    mvn -B -DskipTests org.springframework.boot:spring-boot-maven-plugin:3.3.5:run \  
+      -Dspring-boot.run.profiles=dev \  
+      -Dspring-boot.run.jvmArguments="-Dspring.devtools.restart.poll-interval=1s -Dspring.devtools.restart.quiet-period=400ms -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"; \  
+  fi'

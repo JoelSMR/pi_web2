@@ -1,0 +1,88 @@
+name: integration
+
+volumes:
+  mysqldata:
+
+networks:
+  Data-Back:
+    driver: bridge
+  Front-Back:
+    driver: bridge
+
+services:
+  db:
+    image: mysql:8.4
+    container_name: demo_mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+    environment:
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: pword
+      MYSQL_ROOT_PASSWORD: pwordR
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - Data-Back
+
+  app:
+    build:
+      context: ../Backend/sysmarket
+      dockerfile: Dockerfile.dev
+      target: "runner"
+    container_name: demo_app
+    working_dir : /workspace
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://demo_mysql:3306/appdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      db_username: appuser
+      db_password: pword
+    volumes:
+      - ../Backend:/app
+    ports:
+      - "8080:8080"
+    # tmpfs:
+    #   - /tmp
+    # cap_drop:
+    #   - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - Data-Back
+      - Front-Back
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.dev
+      args:
+        NEXT_PUBLIC_AUTH_API_URL: "http://localhost:8080/api/v1/products/user"
+        NEXT_PUBLIC_PRODUCT_API_URL: "http://localhost:8080/api/v1/products"
+        NEXT_PUBLIC_PROVIDER_API_URL: "http://localhost:8080/api/v1/products/proveedor"
+    container_name: demo_frontend
+    volumes:
+      - ../frontend:/app:cached
+    working_dir: /app
+    init: true
+    tty: true
+    stdin_open: true
+    depends_on:
+      - app
+    ports:
+      - "3000:3000"
+    networks:
+      - Front-Back
+    security_opt:
+       - no-new-privileges:true
+    

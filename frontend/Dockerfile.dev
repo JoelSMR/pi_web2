@@ -1,0 +1,16 @@
+# frontend/Dockerfile.dev
+FROM node:20-bookworm-slim
+
+# Evita problemas de permisos en contenedores
+ENV NODE_ENV=development
+WORKDIR /app
+
+# Instala dependencias si el build no usa bind mount (igual, el volumen las preservará)
+COPY package*.json ./
+RUN npm ci || npm install
+
+# Copia el resto (en tiempo de ejecución, el bind mount de compose sobrescribe /app)
+COPY . .
+
+EXPOSE 3000
+ENTRYPOINT ["npm","run","dev"]
