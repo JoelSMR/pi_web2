@@ -39,6 +39,7 @@ services:
       dockerfile: Dockerfile.dev
       target: "runner"
     container_name: demo_app
+    working_dir : /workspace
     depends_on:
       db:
         condition: service_healthy
@@ -51,10 +52,10 @@ services:
       - ../Backend:/app
     ports:
       - "8080:8080"
-    tmpfs:
-      - /tmp
-    cap_drop:
-      - ALL
+    # tmpfs:
+    #   - /tmp
+    # cap_drop:
+    #   - ALL
     security_opt:
       - no-new-privileges:true
     networks:

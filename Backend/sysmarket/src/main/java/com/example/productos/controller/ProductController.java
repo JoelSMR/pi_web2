@@ -21,6 +21,7 @@ public class ProductController {
 
     @GetMapping
     public List<Product> getAll() {
+        System.out.println("Ej");
         return productService.getProduct();
     }
 
