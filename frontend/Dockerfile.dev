@@ -1,8 +1,17 @@
 # frontend/Dockerfile.dev
 FROM node:20-bookworm-slim
 
+#EStablecemos las variables que vamosa  recibir por argumento en al construccion
+ARG NEXT_PUBLIC_AUTH_API_URL
+ARG NEXT_PUBLIC_PRODUCT_API_URL
+ARG NEXT_PUBLIC_PROVIDER_API_URL
+
 # Evita problemas de permisos en contenedores
-ENV NODE_ENV=development
+ENV NODE_ENV=development\
+    NEXT_PUBLIC_AUTH_API_URL=$NEXT_PUBLIC_AUTH_API_URL \
+    NEXT_PUBLIC_PRODUCT_API_URL=$NEXT_PUBLIC_PRODUCT_API_URL \
+    NEXT_PUBLIC_PROVIDER_API_URL=$NEXT_PUBLIC_PROVIDER_API_URL 
+    
 WORKDIR /app
 
 # Instala dependencias si el build no usa bind mount (igual, el volumen las preservará)

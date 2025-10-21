@@ -7,11 +7,11 @@ import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader'
 import RefreshButton from '@/app/modules/Dashboard/Components/RefreshButton'
 import ConfirmationModal from '@/app/GlobalComponents/Renders/ConfirmationModal'
 import EditProductModal from './EditProductModal'
+import CreateObjectButton from '../../../Components/CreateObjectButton'
 
 type ProductsListViewProps = {
   title?: string
   emptyMessage?: string
-  className?: string
 }
 
 const ProductsListView: React.FC<ProductsListViewProps> = ({
@@ -25,7 +25,7 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
     const {ToggleLoaderOn, ToggleLoaderOff} = useLoader();
     const [items,setItems]=useState<Product[]>(
       [
-        {id:1,price:2,category:"CategoriaCreacion",description:"CategoriaCreacion",name:"Pedro"}
+        {id:0,price:0,category:"",description:"",name:""}
       ]
     );
 
@@ -37,6 +37,7 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
         setItems(iArray);
         ToggleLoaderOff();}
         catch(error){
+          console.log(error);
           setItems([{id:1,price:2,category:"CategoriaDesde el UseEffect",description:"HolaEffect",name:"Pedro"}])
         }
     };
@@ -45,11 +46,17 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
+    const handleCreate=async(np:{
+      nPrice: number, nName: string, nDescription: string, nCategory: string}
+    )=>{
+      ProductService.createProduct(np);
+      fetchItems();
+    }
+
     const showDeleteModal=async(id:number)=>{
       setSelectedId(id);
       setIsDeleteModalOpen(true)
     }
-
     const handleDeleteProduct=async(id:number)=>{
       setIsDeleteModalOpen(false);
       ToggleLoaderOn("Eliminando Producto");
@@ -70,6 +77,7 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
       await ProductService.updateProductByid(id,nProduct);
       ToggleLoaderOff();
     }
+
   return (
     <section className={'space-y-4'}>
       {/* Header con botón a la derecha */}
@@ -78,6 +86,7 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
           {title}
         </h2>
         <div className="flex items-center gap-2">
+          <CreateObjectButton onCreate={handleCreate} />
           <RefreshButton label='' onRefresh={fetchItems}/>
         </div>
       </div>
