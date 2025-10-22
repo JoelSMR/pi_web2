@@ -1,3 +1,5 @@
+package com.example.config;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -12,7 +14,7 @@ public class CorsConfig {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("http://frontend:3000") // Añade aquí tu(s) frontend(s)
+            .allowedOrigins("http://frontend:3000","http://localhost:8501") // Añade aquí tu(s) frontend(s)
             .allowedMethods("GET","POST","PUT","PATCH","DELETE","OPTIONS")
             .allowedHeaders("*")
             .exposedHeaders("Location") // si necesitas exponer algún header
