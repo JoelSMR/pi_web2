@@ -2,7 +2,7 @@ import React from 'react'
 
 interface ConfirmationModalProps{
     isOpen:boolean;
-    onAccept:(id:number)=>void|Promise<void>;
+    onAccept:(id?:number)=>void|Promise<void>;
     onClose:()=>void|Promise<void>;
 };
 
@@ -42,7 +42,7 @@ const ConfirmationModal:React.FC<ConfirmationModalProps> = ({isOpen, onAccept, o
           
           <button  
             type="button"  
-            onClick={()=>onAccept}
+            onClick={()=>onAccept()}
             className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"  
           >  
             Aceptar 
