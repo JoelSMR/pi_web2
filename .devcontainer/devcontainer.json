@@ -12,13 +12,15 @@
 //         "terminal.integrated.defaultProfile.linux": "bash"
 //       },
 //       "extensions": [
-//         "ms-azuretools.vscode-docker",
-//         "esbenp.prettier-vscode",
-//         "dbaeumer.vscode-eslint",
-//         "ms-azuretools.vscode-containers",
-//         "vscjava.vscode-java-pack"
-//       ]
-//     }
+          //   "ms-azuretools.vscode-docker",
+          //   "esbenp.prettier-vscode",
+          //   "dbaeumer.vscode-eslint",
+          //   "ms-azuretools.vscode-containers",
+          //   "vscjava.vscode-java-pack",
+          //   "dsznajder.es7-react-js-snippets",
+          //   "bradlc.vscode-tailwindcss",
+          //   "vmware.vscode-boot-dev-pack"
+          // ]
 //   }
 // }
 

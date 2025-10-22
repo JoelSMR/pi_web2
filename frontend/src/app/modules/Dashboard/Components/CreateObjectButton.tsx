@@ -6,6 +6,12 @@ import CreateProductModal from '../Renders/Products/Components/CreateProductModa
 interface CreateObjectButtonProps{
     onCreate:(nP:{nPrice: number, nName: string, nDescription: string, nCategory: string})=> void | Promise<void>
 }
+ 
+/**
+ * 
+ * @param param0 
+ * @returns JSX BUTTON with functionability
+ */
 const CreateObjectButton:React.FC<CreateObjectButtonProps> = ({onCreate}) => {
     const {ToggleLoaderOff,ToggleLoaderOn} = useLoader();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false)
