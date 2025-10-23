@@ -11,11 +11,11 @@ import lombok.Data;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
-    private Double price;
-    private String name;
-    private String description;
-    private String category;
+    private Long productId; //id product
+    private Double price; //price product
+    private String name; //name product
+    private String description; //description product
+    private String category; //category product
 
     @ManyToOne
     @JoinColumn(name = "proveedorId") 

@@ -29,20 +29,21 @@ public class ProductController {
         return productService.getProduct(productId);
     }
 
-    // save a product
+    // save a new product
+    @PostMapping
     public Product save(@RequestBody Product product) {
-    return productService.save(product);
+        return productService.save(product);
     }
 
-    // update a product
-   @PutMapping("/{productId}")
+    // update an existing product
+    @PutMapping("/{productId}")
     public Product updateProduct(@PathVariable("productId") Long productId, @RequestBody Product product) {
-    return productService.updateProduct(productId, product);
+        return productService.updateProduct(productId, product);
     }
 
     // delete a product
     @DeleteMapping("/{productId}")
-    public void saveOrUpdate(@PathVariable("productId") Long productId) {
+    public void deleteProduct(@PathVariable("productId") Long productId) {
         productService.delete(productId);
     }
 }
