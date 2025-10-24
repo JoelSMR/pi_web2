@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.user.entity.User;
 import com.example.user.service.UserCrudUseCase;
+import com.example.user.controller.dto.UserIdResponse;
 import com.example.user.entity.Role;
 import java.util.List;
 import java.util.Optional;
@@ -23,22 +24,23 @@ public class UserController {
     }
 
     @PostMapping 
-    public ResponseEntity<User> create(@RequestHeader("X-User-Email") String authEmail, @RequestBody User user) { // <<-- RECIBE HEADER
-        // 1. Verificar Permiso: Solo EDITOR o ADMIN pueden crear
-        if (!userCrudUseCase.hasPermission(authEmail, Role.EDITOR)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403 Forbidden
-        }
-
+    public ResponseEntity<UserIdResponse> create(@RequestHeader("X-User-Email") String authEmail, @RequestBody User user) {
+        // 1. Verificar Permiso: Solo EDITOR o ADMIN pueden crea
+     if (!userCrudUseCase.hasPermission(authEmail, Role.EDITOR)) {
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403 Forbidden
+}
         // 2. Ejecutar la lógica de creación si tiene permiso
         try {
-            // Al crear un nuevo usuario, por defecto le asignamos el rol VIEWER
-            user.setRole(Role.VIEWER); 
-            User createdUser = userCrudUseCase.create(user);
-            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+             user.setRole(Role.VIEWER); 
+             User createdUser = userCrudUseCase.create(user);
+            
+            UserIdResponse response = new UserIdResponse(createdUser.getId());
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT); 
-        }
+         return new ResponseEntity<>(HttpStatus.CONFLICT); 
     }
+ }
 
     // 2. GET ALL (Requiere VIEWER, EDITOR o ADMIN)
     @GetMapping 
