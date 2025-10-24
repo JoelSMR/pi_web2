@@ -22,4 +22,4 @@ RUN npm ci || npm install
 COPY . .
 
 EXPOSE 3000
-ENTRYPOINT ["npm","run","dev"]
+CMD ["npm","run","dev"]
