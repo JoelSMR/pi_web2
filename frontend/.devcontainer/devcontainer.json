@@ -10,7 +10,6 @@
     "customizations": {
         "extensions":[
         "ms-azuretools.vscode-docker",
-        "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
         "ms-azuretools.vscode-containers",
         "vscjava.vscode-java-pack",
