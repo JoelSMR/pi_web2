@@ -11,7 +11,7 @@ import com.example.user.entity.User;
 import com.example.user.service.UserCrudUseCase;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     private final UserCrudUseCase service;
@@ -20,13 +20,13 @@ public class UserController {
         this.service = service;
     }
 
-    // GET /api/users - listar todos
+    // GET /api/v1/user  -> listar todos
     @GetMapping
     public List<User> list() {
         return service.findAll();
     }
 
-    // GET /api/users/{id} - obtener por id
+    // GET /api/v1/user/{id} -> obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id) {
         return service.findById(id)
@@ -34,17 +34,17 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // POST /api/users - crear (retorna el usuario con ID generado)
+    // POST /api/v1/user -> crear y devolver con id generado
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user, UriComponentsBuilder uriBuilder) {
-        User created = service.create(user); // aquí ya tiene ID
-        URI location = uriBuilder.path("/api/users/{id}")
+        User created = service.create(user);
+        URI location = uriBuilder.path("/api/v1/user/{id}")
                                  .buildAndExpand(created.getId())
                                  .toUri();
         return ResponseEntity.created(location).body(created);
     }
 
-    // PUT /api/users/{id} - actualizar
+    // PUT /api/v1/user/{id} -> actualizar
     @PutMapping("/{id}")
     public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) {
         return service.update(id, user)
@@ -52,7 +52,7 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE /api/users/{id} - eliminar
+    // DELETE /api/v1/user/{id} -> eliminar
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         boolean deleted = service.delete(id);
