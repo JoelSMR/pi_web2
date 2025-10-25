@@ -1,109 +1,62 @@
 package com.example.user.controller;
 
-import org.springframework.http.HttpStatus;
+import java.net.URI;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.example.user.entity.User;
 import com.example.user.service.UserCrudUseCase;
-import com.example.user.controller.dto.UserIdResponse;
-import com.example.user.entity.Role;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/v1/user") 
+@RequestMapping("/api/users")
 public class UserController {
 
-    // Única inyección necesaria: el UseCase consolidado
-    private final UserCrudUseCase userCrudUseCase;
+    private final UserCrudUseCase service;
 
-    // Inyección a través del constructor
-    public UserController(UserCrudUseCase userCrudUseCase) {
-        this.userCrudUseCase = userCrudUseCase;
+    public UserController(UserCrudUseCase service) {
+        this.service = service;
     }
 
-    @PostMapping 
-    public ResponseEntity<UserIdResponse> create(@RequestHeader("X-User-Email") String authEmail, @RequestBody User user) {
-        // 1. Verificar Permiso: Solo EDITOR o ADMIN pueden crea
-     if (!userCrudUseCase.hasPermission(authEmail, Role.EDITOR)) {
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403 Forbidden
-}
-        // 2. Ejecutar la lógica de creación si tiene permiso
-        try {
-             user.setRole(Role.VIEWER); 
-             User createdUser = userCrudUseCase.create(user);
-            
-            UserIdResponse response = new UserIdResponse(createdUser.getId());
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-            
-        } catch (RuntimeException e) {
-         return new ResponseEntity<>(HttpStatus.CONFLICT); 
-    }
- }
-
-    // 2. GET ALL (Requiere VIEWER, EDITOR o ADMIN)
-    @GetMapping 
-    public ResponseEntity<List<User>> getAll(@RequestHeader("X-User-Email") String authEmail) { // <<-- RECIBE HEADER
-        // 1. Verificar Permiso: Cualquier rol (VIEWER o superior) puede leer
-        if (!userCrudUseCase.hasPermission(authEmail, Role.VIEWER)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403 Forbidden
-        }
-
-        // 2. Ejecutar la lógica de lectura si tiene permiso
-        List<User> users = userCrudUseCase.findAll();
-        return ResponseEntity.ok(users); 
+    // GET /api/users - listar todos
+    @GetMapping
+    public List<User> list() {
+        return service.findAll();
     }
 
-    // 3. UPDATE (Requiere EDITOR o ADMIN)
-    @PutMapping("/{id}") 
-    public ResponseEntity<User> update(@RequestHeader("X-User-Email") String authEmail, @PathVariable Long id, @RequestBody User userDetails) {
-        // 1. Verificar Permiso: Solo EDITOR o ADMIN pueden actualizar
-        if (!userCrudUseCase.hasPermission(authEmail, Role.EDITOR)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403 Forbidden
-        }
-
-        // 2. Ejecutar la lógica de actualización
-        userDetails.setId(id); 
-        Optional<User> updatedUser = userCrudUseCase.update(userDetails);
-        
-        return updatedUser
-            .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    // GET /api/users/{id} - obtener por id
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getById(@PathVariable Long id) {
+        return service.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // 4. DELETE (Requiere solo ADMIN)
-    @DeleteMapping("/{id}") 
-    @ResponseStatus(HttpStatus.NO_CONTENT) 
-    public ResponseEntity<Void> delete(@RequestHeader("X-User-Email") String authEmail, @PathVariable Long id) {
-        // 1. Verificar Permiso: Solo ADMIN puede eliminar
-        if (!userCrudUseCase.hasPermission(authEmail, Role.ADMIN)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403 Forbidden
-        }
-
-        // 2. Ejecutar la lógica de eliminación
-        userCrudUseCase.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    // POST /api/users - crear (retorna el usuario con ID generado)
+    @PostMapping
+    public ResponseEntity<User> create(@RequestBody User user, UriComponentsBuilder uriBuilder) {
+        User created = service.create(user); // aquí ya tiene ID
+        URI location = uriBuilder.path("/api/users/{id}")
+                                 .buildAndExpand(created.getId())
+                                 .toUri();
+        return ResponseEntity.created(location).body(created);
     }
 
-    // --- ENDPOINT ESPECIAL DE LOGIN ---
-
-    // Definición de un DTO simple para recibir credenciales en el request
-    public static class LoginRequest {
-        public String email;
-        public String password;
+    // PUT /api/users/{id} - actualizar
+    @PutMapping("/{id}")
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) {
+        return service.update(id, user)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/login") // POST /usuarios/login
-    public ResponseEntity<Boolean> checkLogin(@RequestBody LoginRequest loginRequest) {
-        
-        // Llama al método CHECK LOGIN del UseCase
-        boolean isValid = userCrudUseCase.checkLogin(
-            loginRequest.email, 
-            loginRequest.password
-        );
-        
-        // Retorna 200 OK y el valor booleano
-        return new ResponseEntity<>(isValid, HttpStatus.OK);
+    // DELETE /api/users/{id} - eliminar
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        boolean deleted = service.delete(id);
+        return deleted ? ResponseEntity.noContent().build()
+                       : ResponseEntity.notFound().build();
     }
 }
