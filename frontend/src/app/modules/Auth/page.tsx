@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import DisplayLogIn from './DisplayLogIn'
+import DisplayLogIn from './Render/DisplayLogIn'
 const page = () => {
 
   return (
