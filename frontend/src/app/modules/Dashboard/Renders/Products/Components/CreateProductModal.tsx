@@ -2,16 +2,21 @@ import React, { useMemo, useState } from 'react'
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader'
 import FormModal from '@/app/GlobalComponents/Renders/FormModal'
 import ConfirmationModal from '@/app/GlobalComponents/Renders/ConfirmationModal'
+import { NewProductToCreate } from '../Models/ProductModels'
+import { Dropdown, DropdownItem } from '@/app/GlobalComponents/Renders/Dropdown'
 
-// 
+
+
 interface CreateProductModalProps{
-    onConfirm:(nP:{nPrice: number, nName: string, nDescription: string, nCategory: string})=>void | Promise<void>
+    onConfirm:(nP:NewProductToCreate)=>void | Promise<void>
     onClose:()=>void
-    isCreateModalOpen:boolean
+    isOpen:boolean
+    providersArray: DropdownItem[]
 }
-const CreateProductModal:React.FC<CreateProductModalProps> = ({onConfirm, onClose, isCreateModalOpen}) => {
+const CreateProductModal:React.FC<CreateProductModalProps> = ({onConfirm, onClose, isOpen, providersArray}) => {
     const [isConfirmCreateOpen, setIsConfirmCreateOpen] = useState<boolean>(false);
     const {ToggleLoaderOff, ToggleLoaderOn} = useLoader();
+
 
     type FormValues = {
         id: string
@@ -19,6 +24,7 @@ const CreateProductModal:React.FC<CreateProductModalProps> = ({onConfirm, onClos
         name: string
         description: string
         category: string
+        providerId: number
     }
 
     const [values, setValues] = useState<FormValues>({
@@ -27,6 +33,7 @@ const CreateProductModal:React.FC<CreateProductModalProps> = ({onConfirm, onClos
         name: '',
         description: '',
         category: '',
+        providerId: 0
       })
 
     const resetValues=()=>{ 
@@ -35,7 +42,8 @@ const CreateProductModal:React.FC<CreateProductModalProps> = ({onConfirm, onClos
       price: '',
       name: '',
       description: '',
-      category: ''
+      category: '',
+      providerId:0
       })
     }
     
@@ -72,12 +80,21 @@ const CreateProductModal:React.FC<CreateProductModalProps> = ({onConfirm, onClos
     
         return e
       }
-    
-      const buildPayload = ()=> ({
-        nPrice: Number(values.price),
-        nName: values.name.trim(),
-        nDescription: values.description.trim(),
-        nCategory: values.category.trim(),
+      /**
+       * @Info  Maps an DTO to send at request
+       * @returns Mapped Object(Payload)
+       */
+      const buildPayload = ():NewProductToCreate=> ({
+        price: Number(values.price),
+        name: values.name.trim(),
+        description: values.description.trim(),
+        category: values.category.trim(),
+        proveedor:{
+            idProveedor: values.providerId,
+            email: '',
+            nombre: '',
+            telefono: ''
+        }
       })
       
 
@@ -94,6 +111,7 @@ const CreateProductModal:React.FC<CreateProductModalProps> = ({onConfirm, onClos
         const payload = buildPayload();
         await onConfirm(payload);}
         finally{
+        setIsConfirmCreateOpen(false);
         resetValues();
         ToggleLoaderOff();
         }
@@ -103,7 +121,7 @@ const CreateProductModal:React.FC<CreateProductModalProps> = ({onConfirm, onClos
   return (
     <React.Fragment>
         <FormModal
-            isOpen={isCreateModalOpen}
+            isOpen={isOpen}
             //Envia el comportamiento de onClose hacia su padre
             onClose={onClose}
             onConfirm={handleConfirm}
@@ -114,6 +132,18 @@ const CreateProductModal:React.FC<CreateProductModalProps> = ({onConfirm, onClos
             <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
                 {/* 2 columnas en md+ para una disposición más horizontal */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+
+                {/* ProveedorId */}
+                 <div className="grid grid-cols-12 items-center gap-3">
+                    <label
+                      // htmlFor={ids.id}
+                      className="col-span-4 text-right text-sm font-medium text-gray-700 dark:text-gray-200 md:text-base"
+                    >
+                      Proveedor
+                    </label>
+                    <Dropdown items={providersArray} onSelect={(id) => setField('providerId', String(id))} placeholder='Seleccione' />
+                    </div>
+                
                 {/* Precio */}
                 <div className="grid grid-cols-12 items-center gap-3">
                     <label

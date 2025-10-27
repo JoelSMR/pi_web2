@@ -8,6 +8,8 @@ ARG NEXT_PUBLIC_PROVIDER_API_URL
 
 # Evita problemas de permisos en contenedores
 ENV NODE_ENV=development\
+# Estas variables de entorno son necesarias para la cotrrecta ejecucion del aplicativo
+#Seran insertadas en las rutas del front
     NEXT_PUBLIC_AUTH_API_URL=$NEXT_PUBLIC_AUTH_API_URL \
     NEXT_PUBLIC_PRODUCT_API_URL=$NEXT_PUBLIC_PRODUCT_API_URL \
     NEXT_PUBLIC_PROVIDER_API_URL=$NEXT_PUBLIC_PROVIDER_API_URL 
@@ -16,12 +18,12 @@ WORKDIR /app
 
 # Instala dependencias si el build no usa bind mount (igual, el volumen las preservará)
 COPY package*.json ./
-RUN npm install -g npm@latest &&\
-    npm install &&\
-    npm install next@latest react@latest react-dom@latest
+RUN npm install -g npm@latest && npm install && npm install next@latest react@latest react-dom@latest
 
 # Copia el resto (en tiempo de ejecución, el bind mount de compose sobrescribe /app)
 COPY . .
-
+#Expose en puerto 3000 dle contenedor
 EXPOSE 3000
+#CMD porque es facilmente reemplazable via sobre escritura al llamar el contenedor 
+#(Esta practica es comun en DevContainers)
 CMD ["npm","run","dev"]

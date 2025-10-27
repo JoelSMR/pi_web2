@@ -68,9 +68,9 @@ services:
       context: ../frontend
       dockerfile: Dockerfile.dev
       args:
-        NEXT_PUBLIC_AUTH_API_URL: "http://localhost:8080/api/v1/products/user"
+        NEXT_PUBLIC_AUTH_API_URL: "http://localhost:8080/api/user"
         NEXT_PUBLIC_PRODUCT_API_URL: "http://localhost:8080/api/v1/products"
-        NEXT_PUBLIC_PROVIDER_API_URL: "http://localhost:8080/api/v1/products/proveedor"
+        NEXT_PUBLIC_PROVIDER_API_URL: "http://localhost:8080/api/proveedores"
     container_name: demo_frontend
     volumes:
       - ../frontend:/app:cached

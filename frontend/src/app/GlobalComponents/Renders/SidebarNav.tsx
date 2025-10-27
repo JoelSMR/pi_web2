@@ -2,6 +2,11 @@
 import Link from 'next/link'
 import React, { useState } from 'react'
 
+/**
+   * @Info
+   * This one works like this -> receives an object array [{}],one object per Item in the SideBar
+   * IF the object have a children prop, became a dopdown, else its just a Button
+   */
 export type NavItem = {
   label: string
   href?: string                   // si tiene children, es opcional
@@ -9,6 +14,10 @@ export type NavItem = {
   children?: NavItem[]            // subrutas (dropdown)
 }
 
+/**
+   * @Info
+   * This one works like this ->Renders by mapping the object array, 
+  */
 export default function SidebarNav({ items }: { items: NavItem[] }) {
   return (
     <nav className="space-y-1">
@@ -18,8 +27,17 @@ export default function SidebarNav({ items }: { items: NavItem[] }) {
     </nav>
   )
 }
-
+/**
+ * 
+ * @param item  NavItem
+ * @param depth  number
+ * 
+ * @Info 
+ * Dinamic render if item have the prop 'children', driving it to the proper component for the suplied info
+ * @returns JSX RENDER
+ */
 function SidebarItem({ item, depth }: { item: NavItem; depth: number }) {
+  // Checks an simple boolean logic to check if the object have a prop
   const hasChildren = Array.isArray(item.children) && item.children.length > 0
   if (!hasChildren) {
     return <SidebarLink item={item} depth={depth} />
@@ -27,6 +45,13 @@ function SidebarItem({ item, depth }: { item: NavItem; depth: number }) {
   return <SidebarGroup item={item} depth={depth} />
 }
 
+/**
+ * 
+ * @param item  NavItem
+ * @param depth number
+ * @Info  The Scope of this component is render the Navigation Buttons -- NOT THE DROPDOWN ONE
+ * @returns JSX Component
+ */
 function SidebarLink({ item, depth }: { item: NavItem; depth: number }) {
   const pad = depth * 10 // indentación por nivel
 
@@ -43,13 +68,20 @@ function SidebarLink({ item, depth }: { item: NavItem; depth: number }) {
   )
 }
 
+/**
+ * 
+ * @param item  NavItem
+ * @param depth  number
+ * @Info  This component renders the DROPDOWN selector in the NAVBAR
+ * @returns JSX COMPONENTs
+ */
 function SidebarGroup({ item, depth }: { item: NavItem; depth: number }) {
   const [open, setOpen] = useState(false)
 
   const pad = depth * 10
 
   return (
-    <div>
+    <React.Fragment>
       <button
         type="button"
         onClick={() => setOpen((s) => !s)}
@@ -77,6 +109,6 @@ function SidebarGroup({ item, depth }: { item: NavItem; depth: number }) {
           <SidebarItem key={child.href ?? child.label} item={child} depth={depth + 1} />
         ))}
       </div>
-    </div>
+    </React.Fragment>
   )
 }
