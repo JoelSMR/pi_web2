@@ -1,3 +1,11 @@
-export interface LoginFormProps{
-    onSubmit:(user:string,pswd:string)=>Promise<void>|void;
+export interface User{
+    id: number
+    name:string
+    email:string
+}
+
+export interface UserDB{
+    id:number
+    nombre:string
+    correo:string
 }
