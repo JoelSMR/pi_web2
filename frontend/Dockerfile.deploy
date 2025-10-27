@@ -68,11 +68,11 @@ COPY --from=builder /app/next.config.ts ./next.config.ts
 # Creamos usuario no root
 RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser \
     && chown -R appuser:appgroup /app
-
+#Cambiamos de usuario
 USER appuser
 
 # Next.js escucha en 3000 por defecto
 EXPOSE 3000
 
 # Arrancamos el servidor de producción de Next.js
-CMD ["npm", "run", "start"]
+ENTRYPOINT ["npm", "run", "start"]

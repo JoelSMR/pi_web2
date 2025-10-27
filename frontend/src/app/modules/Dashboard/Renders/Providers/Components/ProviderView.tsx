@@ -1,30 +1,21 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import CardInfo from './ProductCardInfo'
-import { NewProductToCreate, Product } from '../Models/ProductModels'
-import ProductService from '@/app/utils/api/Product/Service/ProductService'
+import CardInfo from './ProviderCardInfo'
+import { NewProviderToCreate, Provider } from '../Models/ProviderModels'
+import {ProviderService} from '@/app/utils/api/Provider/Service/ProviderService'
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader'
 import RefreshButton from '@/app/modules/Dashboard/Components/RefreshButton'
 import ConfirmationModal from '@/app/GlobalComponents/Renders/ConfirmationModal'
-import EditProductModal from './EditProductModal'
+import EditProviderModal from './EditProviderModal'
 import CreateObjectButton from '../../../Components/CreateObjectButton'
-import { ProviderService } from '@/app/utils/api/Provider/Service/ProviderService'
-import { Provider } from '../../Providers/Models/ProviderModels'
-import { mapProvidersToDropDownItems } from '@/app/utils/api/Provider/Mappers/ProviderMappers'
-import { DropdownItem } from '@/app/GlobalComponents/Renders/Dropdown'
 
 type ProductsListViewProps = {
   title?: string
   emptyMessage?: string
 }
-/**
- * @Info
- * Return the JSX render that contains all the ProductDashBoardList Stuff. Allowing users to CRUD Function the data
- * 
- * @returns  JSX Render
- */
-const ProductsListView: React.FC<ProductsListViewProps> = ({
-  title = 'Productos',
+
+const ProviderListView: React.FC<ProductsListViewProps> = ({
+  title = 'Proveedores',
   emptyMessage = 'No hay elementos para mostrar.'
 }) => {
     //Controls the render of the delete modal
@@ -34,30 +25,16 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
     //Controls the selected id. This refers to an Object ID
     const [selectedId, setSelectedId] = useState<number>(0);
     //Controls the selected id. This refers to an Object ID
-    const [selectedItem,setSelectedItem]= useState<Product>({
-      productId:0,price:0,category:"",description:"",name:"",proveedor:{
-        idProveedor:0,email:"",nombre:"",telefono:""
-        }
-      }
-    );
+    const [selectedItem,setSelectedItem]= useState<Provider>({idProveedor:0, email:"",nombre:"",telefono:""});
     //Renders the Loader Provided By Context
     const {ToggleLoaderOn, ToggleLoaderOff} = useLoader();
     //Items Fetched by FetchItems
-    const [items,setItems]=useState<Product[]>([
-      {
-        productId:0,price:0,category:"",description:"",name:"",
-        proveedor:{
-          idProveedor:0,email:"",nombre:"",telefono:""
-        }
-      }
-    ]);
-
-    const [dropdownItems,setDropdownItems] = useState<DropdownItem[]>([{id:0,name:''}])
+    const [items,setItems]=useState<Provider[]>([{idProveedor:0, email:"",nombre:"",telefono:""}]);
 
     const fetchItems=async ()=>{
         ToggleLoaderOn("Consultando Productos ...");
         try{
-        const iArray=await ProductService.getAllProducts();
+        const iArray:Provider[]=await ProviderService.getAllProviders();
         setItems(iArray);
         }
         catch(error){
@@ -67,27 +44,15 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
           ToggleLoaderOff();
         }
     };
-
-    const fetchProviders=async()=>{
-      ToggleLoaderOn("Consultado Proveedores ... ")
-      try{
-        const pArray:Provider[] = await ProviderService.getAllProviders();
-        setDropdownItems(mapProvidersToDropDownItems(pArray));
-      }catch(e){console.log(e as Error || "Error en FetchProviders")}
-      finally{
-        ToggleLoaderOff();
-      }
-    };
     
     useEffect(()=>{
         fetchItems();
-        fetchProviders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
+    },[])
 
-    const handleCreate=async(np:NewProductToCreate)=>{
+    const handleCreate=async(np:NewProviderToCreate)=>{
       try{
-      await ProductService.createProduct(np);
+      await ProviderService.createProvider(np);
       }
       finally{
       fetchItems();
@@ -113,7 +78,7 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
       try{
       setIsDeleteModalOpen(false);
       ToggleLoaderOn("Eliminando Producto");
-      await ProductService.deleteProductById(id);
+      await ProviderService.deleteProviderById(id);
       }
       finally{
       setSelectedId(0);
@@ -122,18 +87,18 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
       }
     }
     
-    const showEditModal=async(id:number,nProducto:Product)=>{
+    const showEditModal=async(id:number,nProducto:Provider)=>{
       setSelectedId(id);
       setSelectedItem(nProducto);
       setIsEditModalOpen(true);
 
     }
 
-    const handleEditProduct =async(id:number,nProduct:Product)=>{
+    const handleEditProduct =async(id:number,nProduct:Provider)=>{
       try{
         setIsEditModalOpen(false);
         ToggleLoaderOn("Editando Producto ...");
-        await ProductService.updateProductByid(id,nProduct);
+        await ProviderService.updateProviderById(id,nProduct);
       }
       finally{
         ToggleLoaderOff();
@@ -150,7 +115,7 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
           {title}
         </h2>
         <div className="flex items-center gap-2">
-          <CreateObjectButton instanceOf='ProDuct' dropdownItems={dropdownItems} onCreateProduct={handleCreate} />
+          <CreateObjectButton instanceOf='PROVIDER' onCreateProvider={handleCreate} /> 
           <RefreshButton label='' onRefresh={fetchItems}/>
         </div>
       </div>
@@ -165,25 +130,19 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
           {/* Confirmar Eliminacion */}
           <ConfirmationModal isOpen={isDeleteModalOpen} onAccept={()=>{handleDeleteProduct(selectedId)}} onClose={()=>{setIsDeleteModalOpen(false)}} />
           {/* Muestra vista de edicion */}
-          <EditProductModal isEditModalOpen={isEditModalOpen} onClose={()=>setIsEditModalOpen(false)} onConfirmFunction={handleEditProduct} elementId={selectedId} providersArray={dropdownItems}/>
-          
-          {items.map((p:Product) => (
-            <>
-            {console.log(p)}
-            <CardInfo
-              key={p.productId}
-              productId={p.productId}
-              name={p.name}
-              description={p.description}
-              category={p.category}
-              price={p.price}
-              proveedor={p.proveedor}
-              onEdit={showEditModal}
-              onDelete={()=>showDeleteModal(p.productId)}
-              selectedItem={selectedItem}
+          <EditProviderModal isEditModalOpen={isEditModalOpen} onClose={()=>setIsEditModalOpen(false)} onConfirmFunction={handleEditProduct} elementId={selectedId}/>
 
+          {items.map((p) => (
+            <CardInfo
+              key={p.idProveedor}
+              idProveedor={p.idProveedor}
+              nombre={p.nombre}
+              telefono={p.telefono}
+              email={p.email}
+              onEdit={showEditModal}
+              onDelete={()=>showDeleteModal(p.idProveedor)}
+              selectedItem={selectedItem}
             />
-            </>
           ))}
         </React.Fragment>
       )}
@@ -191,4 +150,4 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
   )
 }
 
-export default ProductsListView
+export default ProviderListView

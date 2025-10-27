@@ -1,16 +1,18 @@
 'use client'
 import React, { useEffect, useMemo, useState } from 'react'
 import FormModal from '@/app/GlobalComponents/Renders/FormModal'
-import ProductService from '@/app/util/api/Service/ProductService'
+import ProductService from '@/app/utils/api/Product/Service/ProductService'
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader'
 import { Product } from '../Models/ProductModels'
 import ConfirmationModal from '@/app/GlobalComponents/Renders/ConfirmationModal'
+import Dropdown, { DropdownItem } from '@/app/GlobalComponents/Renders/Dropdown'
 
 interface EditModalProps {
   isEditModalOpen: boolean
   onClose: () => void
   onConfirmFunction: (id:number,nproduct: Product) => void | Promise<void>
   elementId: number
+  providersArray: DropdownItem[]
 }
 
 type FormValues = {
@@ -19,6 +21,8 @@ type FormValues = {
   name: string
   description: string
   category: string
+  providerId: number,
+  // provider: Provider
 }
 
 type Errors = Partial<Record<keyof FormValues, string>>
@@ -29,6 +33,7 @@ const EditProductModal: React.FC<EditModalProps> = ({
   onClose,
   onConfirmFunction,
   elementId,
+  providersArray
 }) => {
   const { ToggleLoaderOn, ToggleLoaderOff } = useLoader();
   const [values, setValues] = useState<FormValues>({
@@ -37,6 +42,7 @@ const EditProductModal: React.FC<EditModalProps> = ({
     name: '',
     description: '',
     category: '',
+    providerId:0
   })
   const [errors, setErrors] = useState<Errors>({});
   const [isConfirmEditOpen, setIsConfirmEditOpen] = useState<boolean>(false);
@@ -59,11 +65,12 @@ const EditProductModal: React.FC<EditModalProps> = ({
       try {
         const product: Product = await ProductService.getProductById(elementId);
         setValues({
-          id: String(product.id),
+          id: String(product.productId),
           price: String(product.price),
           name: product.name ?? '',
           description: product.description ?? '',
           category: product.category ?? '',
+          providerId: product?.proveedor?.idProveedor?? 0
         })
         setErrors({})
       } catch (err) {
@@ -83,7 +90,8 @@ const EditProductModal: React.FC<EditModalProps> = ({
       price: '',
       name: '',
       description: '',
-      category: ''
+      category: '',
+      providerId: 0
       })
     }
 
@@ -109,23 +117,35 @@ const EditProductModal: React.FC<EditModalProps> = ({
   }
 
   const buildPayload = (): Product => ({
-    id: Number(values.id),
+    productId: Number(values.id),
     price: Number(values.price),
     name: values.name.trim(),
     description: values.description.trim(),
     category: values.category.trim(),
+    proveedor: {
+      idProveedor:values.providerId,
+      email:'',
+      nombre:'',
+      telefono:''
+    }
   })
   
   const openConfirmEdit=()=>{
     setIsConfirmEditOpen(true);
   }
   const handleSubmit = async () => {
+    try{
     const e = validate();
     setErrors(e);
     if (Object.keys(e).length > 0) return
     const payload = buildPayload();
+    console.log(payload);
     await onConfirmFunction(elementId,payload);
+    }
+    finally{
+      setIsConfirmEditOpen(false);
     resetValues();
+    }
   }
 
   return (
@@ -146,20 +166,12 @@ const EditProductModal: React.FC<EditModalProps> = ({
           {/* ID (solo lectura) */}
           <div className="grid grid-cols-12 items-center gap-3">
             <label
-              htmlFor={ids.id}
+              // htmlFor={ids.id}
               className="col-span-4 text-right text-sm font-medium text-gray-700 dark:text-gray-200 md:text-base"
             >
-              ID
+              Proveedor
             </label>
-            <div className="col-span-8">
-              <input
-                id={ids.id}
-                type="text"
-                value={values.id}
-                readOnly
-                className="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600 dark:border-neutral-800 dark:bg-neutral-800 dark:text-gray-300"
-              />
-            </div>
+            <Dropdown items={providersArray} onSelect={(id) => setField('providerId', String(id))} placeholder='Seleccione' />
           </div>
 
           {/* Precio */}

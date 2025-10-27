@@ -32,12 +32,14 @@ public class ProductController {
     // save a new product
     @PostMapping
     public Product save(@RequestBody Product product) {
+        System.out.println(product);
         return productService.save(product);
     }
 
     // update an existing product
     @PutMapping("/{productId}")
     public Product updateProduct(@PathVariable("productId") Long productId, @RequestBody Product product) {
+        // System.out.println(product);
         return productService.updateProduct(productId, product);
     }
 

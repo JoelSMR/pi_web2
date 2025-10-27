@@ -1,7 +1,15 @@
 import React from 'react';
 import SidebarNav, { NavItem } from "../../GlobalComponents/Renders/SidebarNav";
 
-
+/**
+ * @Disclaimer
+ * Look in the Next.JS Docs -> layouts usage.
+ * @param children  React.Node -> Wrapped Render ->(page.tsx)
+ * @Info
+ * It have a working way related to the inner APP/PAGE ROUTER
+ * 
+ * Overlays The 'page.jsx'
+ */
 export default async function LayoutComponent({children}: {children:React.ReactNode}){
   return(
     <React.Fragment>
@@ -26,28 +34,23 @@ export default async function LayoutComponent({children}: {children:React.ReactN
     </React.Fragment>
   )
 }
+  
    const navItems: NavItem[] = [
-      { label: 'ej', href: '/workspace' },
+      // { label: 'ej', href: '/workspace' },
       {
         label: 'Productos',
-        href: '/modules/Products', // opcional; útil para marcar activo por prefijo
-        children: [
-          { label: 'Lista', href: '/modules/Products' }
-        ],
+        href: '/modules/Dashboard/Renders/Products', // opcional; útil para marcar activo por prefijo
       },
       {
         label: 'Proveedores',
-        href: '/modules/Providers', // opcional; útil para marcar activo por prefijo
-        children: [
-          { label: 'Lista', href: '/modules/Providers' }
-        ],
+        href: '/modules/Dashboard/Renders/Providers', // opcional; útil para marcar activo por prefijo
       },
       {
         label: 'Configuración',
-        href: '/workspace/settings',
+        href: '/modules/Dashboard/Renders/Config',
         children: [
-          { label: 'Perfil', href: '/workspace/settings/profile' },
-          { label: 'Facturación', href: '/workspace/settings/billing' },
+          { label: 'Perfil', href: '/modules/Dashboard/Renders/Config/User' }
+          // { label: 'Facturación', href: '/modules/Dashboard/Renders/Config/' },
         ],
       },
     ]
