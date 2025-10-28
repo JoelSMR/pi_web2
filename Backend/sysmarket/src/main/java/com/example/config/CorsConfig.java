@@ -14,7 +14,7 @@ public class CorsConfig {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("http://frontend:3000","http://localhost:3000","http://localhost:8501") // Añade aquí tu(s) frontend(s)
+            .allowedOrigins("http://Sysmarket_frontend:3000","http://localhost:3000","http://localhost:8501") // Añade aquí tu(s) frontend(s)
             .allowedMethods("GET","POST","PUT","PATCH","DELETE","OPTIONS")
             .allowedHeaders("*")
             .exposedHeaders("Location") // si necesitas exponer algún header
