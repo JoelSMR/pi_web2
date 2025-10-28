@@ -1,36 +1,10 @@
 // // // Run if wanna Code Backend
-// {
-//   "name": "Integration Backend",
-//   "dockerComposeFile": "docker-compose.dev.yml",
-//   "service": "app",
-//   "workspaceFolder": "/workspace",
-//   "overrideCommand":false,
-//   "shutdownAction": "stopCompose",
-//   "customizations": {
-//     "vscode": {
-//       "settings": {
-//         "terminal.integrated.defaultProfile.linux": "bash"
-//       },
-//       "extensions": [
-//             "ms-azuretools.vscode-docker",
-//             "esbenp.prettier-vscode",
-//             "dbaeumer.vscode-eslint",
-//             "ms-azuretools.vscode-containers",
-//             "vscjava.vscode-java-pack",
-//             "dsznajder.es7-react-js-snippets",
-//             "bradlc.vscode-tailwindcss",
-//             "vmware.vscode-boot-dev-pack"
-//           ]
-//   }
-// }
-
-// // Run if wanna Code Frontend
 {
-  "name": "Integration Frontend",
+  "name": "Integration Backend",
   "dockerComposeFile": "docker-compose.dev.yml",
-  "service": "frontend",
-  "workspaceFolder": "/app",
-  "overrideCommand": true,
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "overrideCommand":false,
   "shutdownAction": "stopCompose",
   "customizations": {
     "vscode": {
@@ -38,16 +12,42 @@
         "terminal.integrated.defaultProfile.linux": "bash"
       },
       "extensions": [
-        "ms-azuretools.vscode-docker",
-        "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint",
-        "ms-azuretools.vscode-containers",
-        "vscjava.vscode-java-pack",
-        "dsznajder.es7-react-js-snippets",
-        "bradlc.vscode-tailwindcss",
-        "vmware.vscode-boot-dev-pack"
-      ]
-    }
+            "ms-azuretools.vscode-docker",
+            "esbenp.prettier-vscode",
+            "dbaeumer.vscode-eslint",
+            "ms-azuretools.vscode-containers",
+            "vscjava.vscode-java-pack",
+            "dsznajder.es7-react-js-snippets",
+            "bradlc.vscode-tailwindcss",
+            "vmware.vscode-boot-dev-pack"
+          ]
   }
+}
+
+// // Run if wanna Code Frontend
+// {
+//   "name": "Integration Frontend",
+//   "dockerComposeFile": "docker-compose.dev.yml",
+//   "service": "frontend",
+//   "workspaceFolder": "/app",
+//   "overrideCommand": true,
+//   "shutdownAction": "stopCompose",
+//   "customizations": {
+//     "vscode": {
+//       "settings": {
+//         "terminal.integrated.defaultProfile.linux": "bash"
+//       },
+//       "extensions": [
+//         "ms-azuretools.vscode-docker",
+//         "esbenp.prettier-vscode",
+//         "dbaeumer.vscode-eslint",
+//         "ms-azuretools.vscode-containers",
+//         "vscjava.vscode-java-pack",
+//         "dsznajder.es7-react-js-snippets",
+//         "bradlc.vscode-tailwindcss",
+//         "vmware.vscode-boot-dev-pack"
+//       ]
+//     }
+//   }
 }
 
