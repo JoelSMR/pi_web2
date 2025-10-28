@@ -1,17 +1,17 @@
 import React from 'react'
-import Router from 'next/router'
+import {useRouter} from 'next/navigation'
 const LogOutButton = () => {
   
-  const router = Router;
+  const router = useRouter();
   const handleLogOut=()=>{
-    router.push("/modules/Auth")
+    router.push("/")
   }
 
   return (
     <React.Fragment>
         <button 
           onClick={handleLogOut}
-          className='bg-red-700 text.white hover:bg-red-600'>
+          className='flex bg-red-500 items-center gap-2 rounded-md px-3 py-2 text-sm transition text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'>
           Cerrar Sesion
         </button>
     </React.Fragment>

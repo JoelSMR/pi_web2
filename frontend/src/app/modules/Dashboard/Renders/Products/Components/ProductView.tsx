@@ -68,20 +68,21 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
         }
     };
 
-    const fetchProviders=async()=>{
-      ToggleLoaderOn("Consultado Proveedores ... ")
-      try{
-        const pArray:Provider[] = await ProviderService.getAllProviders();
-        setDropdownItems(mapProvidersToDropDownItems(pArray));
-      }catch(e){console.log(e as Error || "Error en FetchProviders")}
-      finally{
-        ToggleLoaderOff();
-      }
-    };
-    
+   
     useEffect(()=>{
-        fetchItems();
-        fetchProviders();
+      const fetchProviders=async()=>{
+        ToggleLoaderOn("Consultado Proveedores ... ")
+        try{
+          const pArray:Provider[] = await ProviderService.getAllProviders();
+          setDropdownItems(mapProvidersToDropDownItems(pArray));
+        }catch(e){console.log(e as Error || "Error en FetchProviders")}
+        finally{
+          ToggleLoaderOff();
+        }
+      };
+
+      fetchItems();
+      fetchProviders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
 
@@ -150,7 +151,7 @@ const ProductsListView: React.FC<ProductsListViewProps> = ({
           {title}
         </h2>
         <div className="flex items-center gap-2">
-          <CreateObjectButton instanceOf='ProDuct' dropdownItems={dropdownItems} onCreateProduct={handleCreate} />
+          <CreateObjectButton instanceOf='product' dropdownItems={dropdownItems} onCreateProduct={handleCreate} />
           <RefreshButton label='' onRefresh={fetchItems}/>
         </div>
       </div>

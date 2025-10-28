@@ -4,8 +4,8 @@ import { axiosAuthInstance } from "../../ServiceFactory/AxiosServiceFactory"
 export class AuthService{
     private static api = axiosAuthInstance;
 
-    static LogInUser= async(username:string, password:string)=>{
-       const response = await this.api.post("/Login",{username,password})
+    static LogInUser= async(nombre:string, correo:string)=>{
+       const response = await this.api.post("/checklogin",{nombre,correo})
        return response.data
     }
 

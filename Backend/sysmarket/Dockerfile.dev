@@ -15,7 +15,7 @@ ENV MAVEN_OPTS="-XX:MaxRAMPercentage=75 -Djava.security.egd=file:/dev/urandom"
 EXPOSE 8080 5005
 # Comando por defecto: arrancar en caliente (perfil dev)
 # - Usa mvnw si lo tienes; fallback a mvn si no
-ENTRYPOINT sh -lc '\  
+CMD sh -lc '\  
   echo "PWD: $PWD"; ls -la | sed -n "1,50p"; \  
   if [ ! -f pom.xml ]; then echo "ERROR: No se encontró pom.xml en $PWD"; exit 1; fi; \  
   if [ -x "./mvnw" ]; then \  
