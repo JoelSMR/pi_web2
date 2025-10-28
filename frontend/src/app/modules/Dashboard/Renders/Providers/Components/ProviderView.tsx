@@ -115,7 +115,7 @@ const ProviderListView: React.FC<ProductsListViewProps> = ({
           {title}
         </h2>
         <div className="flex items-center gap-2">
-          <CreateObjectButton instanceOf='PROVIDER' onCreateProvider={handleCreate} /> 
+          <CreateObjectButton instanceOf='provider' onCreateProvider={handleCreate} /> 
           <RefreshButton label='' onRefresh={fetchItems}/>
         </div>
       </div>
