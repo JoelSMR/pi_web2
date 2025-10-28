@@ -50,4 +50,10 @@ public class UserCrudUseCase {
         }
         return false;
     }
+
+    public boolean checkLogin(String correo, String nombre) {
+        return repository.findByCorreo(correo)
+                .map(u -> nombre != null && nombre.equals(u.getNombre()))
+                .orElse(false);
+    }
 }
