@@ -1,4 +1,5 @@
 'use client'
+import LogOutButton from '@/app/modules/Auth/Components/LogOutButton'
 import Link from 'next/link'
 import React, { useState } from 'react'
 
@@ -24,6 +25,8 @@ export default function SidebarNav({ items }: { items: NavItem[] }) {
       {items.map((item) => (
         <SidebarItem key={item.href ?? item.label} item={item} depth={0} />
       ))}
+      <br />
+      <LogOutButton />
     </nav>
   )
 }

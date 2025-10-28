@@ -5,8 +5,10 @@ import ProductCard from "../Components/ProductCard";
 import { useEffect, useState } from "react";
 import { Product } from "../../Dashboard/Renders/Products/Models/ProductModels";
 import Footer from "../Components/Footer";
+import useLoader from "@/app/GlobalComponents/CustomHooks/useLoader";
 
 export default function HomePage() {
+    const {ToggleLoaderOff,ToggleLoaderOn} = useLoader();
     const [products, setProducts] = useState<Product[]>([{
         productId: 0,
         price: 0,
@@ -23,9 +25,15 @@ export default function HomePage() {
     
     useEffect(()=>{
         const fetchProducts =async()=>{
+          try{
+            ToggleLoaderOn("Bienvenido ...")
             setProducts(await ProductService.getAllProducts());
+          }finally{
+            ToggleLoaderOff();
+          }
         }
         fetchProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
   return (
@@ -34,7 +42,7 @@ export default function HomePage() {
       <Header />
 
       {/* Presentación */}
-      <section className="text-center max-w-2xl mt-12 bg-red-600">
+      <section className="text-center max-w-2xl mt-12 ">
         <h2 className="text-3xl font-bold mb-4">Tu sistema de gestión de inventario</h2>
         <p className="text-gray-600 mb-6">
           Sysmarket te ayuda a administrar productos, precios y existencias de forma sencilla

@@ -16,7 +16,7 @@ interface LoginFormModalProps{
 const LogInFormModal:React.FC<LoginFormModalProps> = ({ onSubmit , onCreateUser, isOpen, onClose }) => {
   const [username,setUsername] = useState<string>("")
   const [password,setPassword] = useState<string>("")
-  const [isPasswordHidden, setIsPasswordHidden] = useState<boolean>(true);
+  const [isPasswordHidden, setIsPasswordHidden] = useState<boolean>(false);
   const [isCreateUserModalOpen, setIsCreateUserModalOpen] = useState<boolean>(false);
 
   if (!isOpen) return null
@@ -41,7 +41,7 @@ const LogInFormModal:React.FC<LoginFormModalProps> = ({ onSubmit , onCreateUser,
               htmlFor="username"  
               className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"  
             >  
-              Username  
+              Nombre 
             </label>  
             <input  
               id="username"  
@@ -59,7 +59,7 @@ const LogInFormModal:React.FC<LoginFormModalProps> = ({ onSubmit , onCreateUser,
               htmlFor="password"  
               className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"  
             >  
-              Contraseña  
+              Correo
             </label>  
             <input  
               id="password"  
@@ -78,11 +78,11 @@ const LogInFormModal:React.FC<LoginFormModalProps> = ({ onSubmit , onCreateUser,
           >
           ¿No tienes Usuario?
           </button>  
-
+          <br />
           <button
           className='dark:text-white mb-4'
           onClick={()=>setIsPasswordHidden(!isPasswordHidden)}>
-            { isPasswordHidden? 'Mostrar Contraseña' : 'Ocultar Contraseña'}
+            { isPasswordHidden? 'Mostrar Correo' : 'Ocultar Correo'}
           </button>
 
           <button  
@@ -92,7 +92,7 @@ const LogInFormModal:React.FC<LoginFormModalProps> = ({ onSubmit , onCreateUser,
           >  
             Entrar  
           </button>
-
+          <br />
           <button  
             type="button"  
             onClick={onClose}  

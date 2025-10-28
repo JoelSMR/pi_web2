@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import LogInFormModal from '../../Auth/Components/LogInFormModal';
-import Router  from 'next/router';
+import {useRouter}  from 'next/navigation';
 import { AuthService } from '@/app/utils/api/Auth/Service/AuthService';
 import useLoader from '@/app/GlobalComponents/CustomHooks/useLoader';
 import { UserDB } from '../../Auth/Models/LogInFormModels';
@@ -16,13 +16,14 @@ const Header = () => {
 
     const {ToggleLoaderOn,ToggleLoaderOff} = useLoader();
 
-    const router = Router;    
+    const router = useRouter();    
 
     const handleLoginSubmit=async(username:string, password:string)=>{
       try{
       ToggleLoaderOn("Comprobando Inicio de Sesion...");
-      const isRegistered = await AuthService.LogInUser(username,password);
-      if (isRegistered) router.push("/modules/Dashboard/Renders/Products");
+      const response= await AuthService.LogInUser(username,password);
+      const isRegistered= response.authenticated;
+      if (isRegistered){ router.push("/modules/Dashboard/Renders/Products");}
     }finally{
       ToggleLoaderOff();
     }

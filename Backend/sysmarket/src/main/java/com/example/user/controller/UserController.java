@@ -60,21 +60,11 @@ public class UserController {
                 : ResponseEntity.notFound().build();
     }
 
-    @RestController
-    public class AuthController {
-
-        private final UserCrudUseCase service;
-
-        public AuthController(UserCrudUseCase service) {
-            this.service = service;
-        }
-
-        @PostMapping("/checklogin")
-        public ResponseEntity<?> checklogin(@RequestBody User body) {
-            boolean ok = service.checkLogin(body.getCorreo(), body.getNombre());
-            return ok
-                    ? ResponseEntity.ok(Collections.singletonMap("authenticated", true))
-                    : ResponseEntity.status(401).body(Collections.singletonMap("authenticated", false));
-        }
+    @PostMapping("/checklogin")
+    public ResponseEntity<?> checklogin(@RequestBody User body) {
+        boolean ok = service.checkLogin(body.getCorreo(), body.getNombre());
+        return ok
+                ? ResponseEntity.ok(Collections.singletonMap("authenticated", true))
+                : ResponseEntity.status(401).body(Collections.singletonMap("authenticated", false));
     }
 }

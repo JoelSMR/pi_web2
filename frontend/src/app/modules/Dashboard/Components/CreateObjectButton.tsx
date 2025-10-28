@@ -58,12 +58,19 @@ const CreateObjectButton:React.FC<CreateObjectButtonProps> = (props) => {
             }
         }
         return (
-            <CreateProductModal
-                isOpen={isCreateModalOpen}
-                onClose={()=>setIsCreateModalOpen(false)}
-                onConfirm={handleCreateProduct} 
-                providersArray={dropdownItems}
-            />
+            <React.Fragment>    
+                <button className='p-1 rounded-xl bg-green-500 text-white hover:bg-green-800 dark:bg-blue-900 dark:hover:bg-blue-700 '
+                    onClick={handleOpen}
+                >
+                    Crear
+                </button>
+                <CreateProductModal
+                    isOpen={isCreateModalOpen}
+                    onClose={()=>setIsCreateModalOpen(false)}
+                    onConfirm={handleCreateProduct} 
+                    providersArray={dropdownItems}
+                />
+            </ React.Fragment>
         )
 
     }
@@ -81,14 +88,21 @@ const CreateObjectButton:React.FC<CreateObjectButtonProps> = (props) => {
             }
         }
         return (
-            <CreateProviderModal 
-                isOpen={isCreateModalOpen} 
-                onClose={hideCreateModal} 
-                onConfirm={handleCreateProvider}
-            / >
+            <React.Fragment>
+                <button className='p-1 rounded-xl bg-green-500 text-white hover:bg-green-800 dark:bg-blue-900 dark:hover:bg-blue-700'
+                    onClick={handleOpen}
+                >
+                    Crear
+                </button>
+            
+                <CreateProviderModal 
+                    isOpen={isCreateModalOpen} 
+                    onClose={hideCreateModal} 
+                    onConfirm={handleCreateProvider}
+                / >
+            </React.Fragment>
         )
     }
-    else{return null}
 }
     
    
