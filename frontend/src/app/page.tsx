@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import ProductsList from './GlobalComponents/Renders/ProductsList';
 
 export default function HomePage() {
   return (
@@ -24,30 +25,16 @@ export default function HomePage() {
           y eficiente. Perfecto para pequeños negocios o emprendimientos.
         </p>
         <Image
-          src="/images/inventario.png"
-          alt="Gestión de inventario" 
+          src="pi_web2/frontend/src/app/Images/inventario.png"
+          alt="Gestión de inventario"
           width={500}
           height={300}
           className="rounded-lg shadow-md mx-auto"
         />
       </section>
 
-      {/* Productos */}
-      <section className="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-8 w-full max-w-6xl">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white shadow-md rounded-lg p-4 text-center hover:scale-105 transition">
-            <Image
-              src={`/images/producto${i}.png`}
-              alt={`Producto ${i}`}
-              width={200}
-              height={200}
-              className="mx-auto"
-            />
-            <h3 className="font-semibold mt-2">Producto {i}</h3>
-            <p className="text-indigo-600 font-bold">$ {i * 10000}</p>
-          </div>
-        ))}
-      </section>
+      {/* Productos desde la API */}
+      <ProductsList />
 
       {/* Footer */}
       <footer className="mt-16 py-4 text-gray-500">
